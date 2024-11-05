@@ -47,7 +47,7 @@ export default function Login() {
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": `${API_URL}`, // Frontend URL
+          "Access-Control-Allow-Origin": `https://liwan-back-and-front-main.vercel.app/`, // Frontend URL
           "Access-Control-Allow-Credentials": "true", // Allow credentials
         },
         body: JSON.stringify({
