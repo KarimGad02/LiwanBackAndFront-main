@@ -1,6 +1,8 @@
-"use client";
-import { API_URL } from "../../../config";
+"use client"; // Only needed if you're using client-side hooks or features
+
+import { API_URL } from "../../../config"; // Adjust your import as necessary
 import { useState, useEffect } from "react";
+import { ThemeProvider, useTheme } from "next-themes";
 import {
   Moon,
   Sun,
@@ -12,9 +14,8 @@ import {
   LayoutDashboard,
   LogOut,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { ThemeProvider, useTheme } from "next-themes";
+import { motion, AnimatePresence } from "framer-motion";
 
 function PersonalInformation() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,8 +29,6 @@ function PersonalInformation() {
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
-
-  //  SEIF'S CODE TO CONNECT BACKEND WITH FRONTEND
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -85,9 +84,9 @@ function PersonalInformation() {
 
         if (employee) {
           setName(employee.fullName);
-          setPhone(employee.phone || ""); // Handle case where phone is not available
+          setPhone(employee.phone || "");
           setEmail(employee.email);
-          setExtension(employee.extensionsnumber || ""); // Handle case where extension is not available
+          setExtension(employee.extensionsnumber || "");
         } else {
           console.error("Employee not found");
         }
@@ -275,11 +274,11 @@ function InputField({
   );
 }
 
-// Default export for the Next.js page
-export default function PersonalInformationPage() {
-  return (
-    <ThemeProvider attribute="class">
-      <PersonalInformation />
-    </ThemeProvider>
-  );
-}
+// This should be the default export
+const PersonalInformationPage = () => (
+  <ThemeProvider attribute="class">
+    <PersonalInformation />
+  </ThemeProvider>
+);
+
+export default PersonalInformationPage;
