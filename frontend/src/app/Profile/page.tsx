@@ -16,7 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ThemeProvider, useTheme } from "next-themes";
 
-export function PersonalInformation() {
+function PersonalInformation() {
   const [isExpanded, setIsExpanded] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -29,7 +29,8 @@ export function PersonalInformation() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  // SEIF'S CODE TO CONNECT BACKEND WITH FRONTEND
+  //  SEIF'S CODE TO CONNECT BACKEND WITH FRONTEND
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -170,48 +171,34 @@ export function PersonalInformation() {
             >
               <form className="space-y-6">
                 <div className="grid gap-6 md:grid-cols-2">
-                  <div className="form-control flex flex-col">
-                    <label className="mb-2 font-medium">Employee Name</label>
-                    <input
-                      className="p-2"
-                      id="name"
-                      type="text"
-                      value={name}
-                      disabled
-                    />
-                  </div>
-                  <div className="form-control flex flex-col">
-                    <label className="mb-2 font-medium">Employee Phone</label>
-                    <input
-                      className="p-2"
-                      id="phone"
-                      type="tel"
-                      value={phone}
-                      disabled
-                    />
-                  </div>
-                  <div className="form-control flex flex-col">
-                    <label className="mb-2 font-medium">Employee Email</label>
-                    <input
-                      className="p-2"
-                      id="email"
-                      type="email"
-                      value={email}
-                      disabled
-                    />
-                  </div>
-                  <div className="form-control flex flex-col">
-                    <label className="mb-2 font-medium">
-                      Employee Extension
-                    </label>
-                    <input
-                      className="p-2"
-                      id="extension"
-                      type="text"
-                      value={extension}
-                      disabled
-                    />
-                  </div>
+                  <InputField
+                    label="Employee Name"
+                    id="name"
+                    type="text"
+                    value={name}
+                    disabled
+                  />
+                  <InputField
+                    label="Employee Phone"
+                    id="phone"
+                    type="tel"
+                    value={phone}
+                    disabled
+                  />
+                  <InputField
+                    label="Employee Email"
+                    id="email"
+                    type="email"
+                    value={email}
+                    disabled
+                  />
+                  <InputField
+                    label="Employee Extension"
+                    id="extension"
+                    type="text"
+                    value={extension}
+                    disabled
+                  />
                 </div>
               </form>
             </motion.div>
@@ -258,7 +245,37 @@ function SidebarItem({
   );
 }
 
-// The main page component that serves as the default export
+function InputField({
+  label,
+  id,
+  type,
+  value,
+  disabled,
+}: {
+  label: string;
+  id: string;
+  type: string;
+  value: string;
+  disabled?: boolean;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="block text-md font-semibold mb-1">
+        {label}
+      </label>
+      <input
+        type={type}
+        id={id}
+        name={id}
+        value={value}
+        disabled={disabled}
+        className="w-full p-2 rounded bg-Primary text-neutral-200 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-primary-foreground"
+      />
+    </div>
+  );
+}
+
+// Default export for the Next.js page
 export default function PersonalInformationPage() {
   return (
     <ThemeProvider attribute="class">
