@@ -1,6 +1,5 @@
 "use client";
 import { API_URL } from "../../../config";
-
 import { useState, useEffect } from "react";
 import {
   Moon,
@@ -30,8 +29,7 @@ export function PersonalInformation() {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
-  //  SEIF'S CODE TO CONNECT BACKEND WITH FRONTEND
-
+  // SEIF'S CODE TO CONNECT BACKEND WITH FRONTEND
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -192,7 +190,6 @@ export function PersonalInformation() {
                       disabled
                     />
                   </div>
-
                   <div className="form-control flex flex-col">
                     <label className="mb-2 font-medium">Employee Email</label>
                     <input
@@ -205,7 +202,7 @@ export function PersonalInformation() {
                   </div>
                   <div className="form-control flex flex-col">
                     <label className="mb-2 font-medium">
-                      Employee Extenstion
+                      Employee Extension
                     </label>
                     <input
                       className="p-2"
@@ -261,30 +258,7 @@ function SidebarItem({
   );
 }
 
-function InputField({
-  label,
-  id,
-  type,
-}: {
-  label: string;
-  id: string;
-  type: string;
-}) {
-  return (
-    <div>
-      <label htmlFor={id} className="block text-md font-semibold mb-1">
-        {label}
-      </label>
-      <input
-        type={type}
-        id={id}
-        name={id}
-        className="w-full p-2 rounded bg-Primary text-neutral-200 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-primary-foreground"
-      />
-    </div>
-  );
-}
-
+// The main page component that serves as the default export
 export default function PersonalInformationPage() {
   return (
     <ThemeProvider attribute="class">
