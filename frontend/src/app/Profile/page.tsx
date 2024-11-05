@@ -45,23 +45,23 @@ function PersonalInformation() {
       return null;
     }
   };
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken="))
+        ?.split("=")[1];
 
-  useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+      if (!token) return;
 
-    if (!token) return;
+      const payload = decodeTokenPayload(token);
+      const employeeId = payload?.id;
 
-    const payload = decodeTokenPayload(token);
-    const employeeId = payload?.id;
+      if (!employeeId) return;
 
-    if (!employeeId) return;
-
-    fetchEmployeeData(token, employeeId);
-  }, []);
-
+      fetchEmployeeData(token, employeeId);
+    }, []);
+  }
   const fetchEmployeeData = (token, employeeId) => {
     fetch(`${API_URL}/api/v1/employees/`, {
       method: "GET",

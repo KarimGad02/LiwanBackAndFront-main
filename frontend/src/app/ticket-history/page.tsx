@@ -86,62 +86,62 @@ export function TicketManagement() {
   };
 
   // Fetch employee data to check authorization
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      const accessToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken"))
+        ?.split("=")[1];
 
-  useEffect(() => {
-    const accessToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken"))
-      ?.split("=")[1];
+      if (accessToken) {
+        const payload = decodeTokenPayload(accessToken);
+        const employeeId = payload?.id; // Get the employee ID from the token payload
 
-    if (accessToken) {
-      const payload = decodeTokenPayload(accessToken);
-      const employeeId = payload?.id; // Get the employee ID from the token payload
-
-      if (employeeId) {
-        fetch(`${API_URL}/api/v1/employees/`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const employees = data?.data?.employees || [];
-            const employee = employees.find((emp) => emp._id === employeeId);
-
-            if (employee) {
-              setEmployeeData(employee);
-              setIsAdmin(employee.role === "admin");
-
-              // Fetch tickets if the user is an admin
-              if (employee.role === "admin") {
-                fetch(`${API_URL}/api/v1/tickets`, {
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                  },
-                })
-                  .then((response) => response.json())
-                  .then((ticketData) => {
-                    setTicketsData(ticketData?.data?.tickets || []);
-                  })
-                  .catch((error) =>
-                    console.error("Error fetching tickets data:", error)
-                  );
-              }
-            } else {
-              console.error("Employee not found.");
-            }
+        if (employeeId) {
+          fetch(`${API_URL}/api/v1/employees/`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           })
-          .catch((error) =>
-            console.error("Error fetching employee data:", error)
-          );
-      } else {
-        console.error("Invalid token payload. No employee ID found.");
-      }
-    } else {
-      console.log("No access token found.");
-    }
-  }, []);
+            .then((response) => response.json())
+            .then((data) => {
+              const employees = data?.data?.employees || [];
+              const employee = employees.find((emp) => emp._id === employeeId);
 
+              if (employee) {
+                setEmployeeData(employee);
+                setIsAdmin(employee.role === "admin");
+
+                // Fetch tickets if the user is an admin
+                if (employee.role === "admin") {
+                  fetch(`${API_URL}/api/v1/tickets`, {
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                    },
+                  })
+                    .then((response) => response.json())
+                    .then((ticketData) => {
+                      setTicketsData(ticketData?.data?.tickets || []);
+                    })
+                    .catch((error) =>
+                      console.error("Error fetching tickets data:", error)
+                    );
+                }
+              } else {
+                console.error("Employee not found.");
+              }
+            })
+            .catch((error) =>
+              console.error("Error fetching employee data:", error)
+            );
+        } else {
+          console.error("Invalid token payload. No employee ID found.");
+        }
+      } else {
+        console.log("No access token found.");
+      }
+    }, []);
+  }
   const departments = Array.from(
     new Set(ticketsData.map((ticket) => ticket.assignedTo.name))
   );
@@ -224,10 +224,12 @@ export function TicketManagement() {
             href="/"
             isExpanded={isExpanded}
             onClick={() => {
-              document.cookie =
-                "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
-              // Redirect to the login page
-              router.push("/");
+              if (typeof window !== "undefined") {
+                document.cookie =
+                  "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
+                // Redirect to the login page
+                router.push("/");
+              }
             }}
           />
         </nav>

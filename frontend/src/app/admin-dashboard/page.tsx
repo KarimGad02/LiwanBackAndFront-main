@@ -120,95 +120,100 @@ export function AdminDashboard() {
       return null;
     }
   };
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      const accessToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken"))
+        ?.split("=")[1];
 
-  useEffect(() => {
-    const accessToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken"))
-      ?.split("=")[1];
+      if (accessToken) {
+        const payload = decodeTokenPayload(accessToken);
+        const employeeId = payload?.id;
 
-    if (accessToken) {
-      const payload = decodeTokenPayload(accessToken);
-      const employeeId = payload?.id;
+        if (employeeId) {
+          fetch(`${API_URL}/api/v1/employees/`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              const employees = data?.data?.employees || [];
+              const employee = employees.find((emp) => emp._id === employeeId);
 
-      if (employeeId) {
-        fetch(`${API_URL}/api/v1/employees/`, {
+              if (employee) {
+                setEmployeeData(employee);
+                setIsAdmin(employee.role === "admin");
+              } else {
+                console.error("Employee not found.");
+              }
+            })
+            .catch((error) =>
+              console.error("Error fetching employee data:", error)
+            );
+        } else {
+          console.error("Invalid token payload. No employee ID found.");
+        }
+      } else {
+        console.log("No access token found.");
+      }
+    }, []);
+  }
+  // Fetch departments
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      if (isAdmin) {
+        fetch(`${API_URL}/api/v1/departments/`, {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${
+              document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("accessToken"))
+                ?.split("=")[1]
+            }`,
           },
         })
           .then((response) => response.json())
           .then((data) => {
-            const employees = data?.data?.employees || [];
-            const employee = employees.find((emp) => emp._id === employeeId);
-
-            if (employee) {
-              setEmployeeData(employee);
-              setIsAdmin(employee.role === "admin");
-            } else {
-              console.error("Employee not found.");
-            }
+            setDepartments(data?.data?.departments || []);
           })
           .catch((error) =>
-            console.error("Error fetching employee data:", error)
+            console.error("Error fetching departments:", error)
           );
-      } else {
-        console.error("Invalid token payload. No employee ID found.");
       }
-    } else {
-      console.log("No access token found.");
-    }
-  }, []);
-
-  // Fetch departments
-  useEffect(() => {
-    if (isAdmin) {
-      fetch(`${API_URL}/api/v1/departments/`, {
-        headers: {
-          Authorization: `Bearer ${
-            document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("accessToken"))
-              ?.split("=")[1]
-          }`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setDepartments(data?.data?.departments || []);
-        })
-        .catch((error) => console.error("Error fetching departments:", error));
-    }
-  }, [isAdmin]);
-
+    }, [isAdmin]);
+  }
   // Create new department
   const handleAddDepartment = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${API_URL}/api/v1/departments/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${
-            document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("accessToken"))
-              ?.split("=")[1]
-          }`,
-        },
-        body: JSON.stringify({ name: newDepartment }), // Use newDepartment state
-      });
+      if (typeof window !== "undefined") {
+        const response = await fetch(`${API_URL}/api/v1/departments/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${
+              document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("accessToken"))
+                ?.split("=")[1]
+            }`,
+          },
+          body: JSON.stringify({ name: newDepartment }), // Use newDepartment state
+        });
 
-      if (response.ok) {
-        // Department added successfully
-        setNewDepartment(""); // Clear the input field
-        closeModal(); // Close the modal
-        // Refresh the department list
-        const updatedDepartments = await fetchDepartments(); // Fetch updated departments
-        setDepartments(updatedDepartments); // Update the state with new departments
-      } else {
-        console.error("Failed to add department:", response.statusText);
+        if (response.ok) {
+          // Department added successfully
+          setNewDepartment(""); // Clear the input field
+          closeModal(); // Close the modal
+          // Refresh the department list
+          const updatedDepartments = await fetchDepartments(); // Fetch updated departments
+          setDepartments(updatedDepartments); // Update the state with new departments
+        } else {
+          console.error("Failed to add department:", response.statusText);
+        }
       }
     } catch (error) {
       console.error("Error adding department:", error);
@@ -224,31 +229,33 @@ export function AdminDashboard() {
     });
     console.log(test);
     try {
-      const accessToken = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("accessToken"))
-        ?.split("=")[1];
-      const response = await fetch(
-        `${API_URL}/api/v1/employees/UpdateManagerDep`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            emailOrExtension: `${extensionsnumber}`,
-            departmentsManaged: [],
-          }),
+      if (typeof window !== "undefined") {
+        const accessToken = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("accessToken"))
+          ?.split("=")[1];
+        const response = await fetch(
+          `${API_URL}/api/v1/employees/UpdateManagerDep`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+              emailOrExtension: `${extensionsnumber}`,
+              departmentsManaged: [],
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to create manager");
         }
-      );
 
-      if (!response.ok) {
-        throw new Error("Failed to create manager");
+        const data = await response.json();
+        console.log("Manager created successfully:", data);
       }
-
-      const data = await response.json();
-      console.log("Manager created successfully:", data);
     } catch (error) {
       console.error("Error:", error);
       // Handle error (e.g., show a notification to the user)
@@ -260,90 +267,91 @@ export function AdminDashboard() {
       "Are you sure you want to delete this department?"
     );
     if (!confirmDelete) return; // If the user cancels the deletion, exit the function
+    if (typeof window !== "undefined") {
+      try {
+        // Make the DELETE request to the API endpoint
 
-    try {
-      // Make the DELETE request to the API endpoint
-      const response = await fetch(
-        `${API_URL}/api/v1/departments/${departmentId}`,
-        {
-          method: "DELETE",
+        const response = await fetch(
+          `${API_URL}/api/v1/departments/${departmentId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${
+                document.cookie
+                  .split("; ")
+                  .find((row) => row.startsWith("accessToken"))
+                  ?.split("=")[1]
+              }`, // Add authorization if required
+            },
+          }
+        );
+        if (response.ok) {
+          // Update the local state after successful deletion
+          setDepartments((prevDepartments) =>
+            prevDepartments.filter(
+              (department) => department._id !== departmentId
+            )
+          );
+          console.log("Department deleted successfully");
+        } else {
+          console.error("Failed to delete department:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error deleting department:", error);
+      }
+    }
+  };
+  // Fetch departments
+  const fetchDepartments = async () => {
+    if (typeof window !== "undefined") {
+      try {
+        const response = await fetch(`${API_URL}/api/v1/departments/`, {
           headers: {
             Authorization: `Bearer ${
               document.cookie
                 .split("; ")
                 .find((row) => row.startsWith("accessToken"))
                 ?.split("=")[1]
-            }`, // Add authorization if required
+            }`,
           },
-        }
-      );
-
-      if (response.ok) {
-        // Update the local state after successful deletion
-        setDepartments((prevDepartments) =>
-          prevDepartments.filter(
-            (department) => department._id !== departmentId
-          )
-        );
-        console.log("Department deleted successfully");
-      } else {
-        console.error("Failed to delete department:", response.statusText);
+        });
+        const data = await response.json();
+        return data.data.departments; // Return the departments array
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+        return []; // Return an empty array on error
       }
-    } catch (error) {
-      console.error("Error deleting department:", error);
     }
+    // Fetch existing managers
   };
-
-  // Fetch departments
-  const fetchDepartments = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/v1/departments/`, {
-        headers: {
-          Authorization: `Bearer ${
-            document.cookie
-              .split("; ")
-              .find((row) => row.startsWith("accessToken"))
-              ?.split("=")[1]
-          }`,
-        },
-      });
-      const data = await response.json();
-      return data.data.departments; // Return the departments array
-    } catch (error) {
-      console.error("Error fetching departments:", error);
-      return []; // Return an empty array on error
-    }
-  };
-  // Fetch existing managers
-
   const [managers, setManagers] = useState([]);
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      const accessToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken"))
+        ?.split("=")[1];
 
-  useEffect(() => {
-    const accessToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken"))
-      ?.split("=")[1];
-
-    if (accessToken) {
-      fetch(`${API_URL}api/v1/employees/`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Filter only the managers from the response
-          const managers = data?.data?.employees.filter(
-            (emp) => emp.role === "manager"
-          );
-          setManagers(managers);
+      if (accessToken) {
+        fetch(`${API_URL}api/v1/employees/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         })
-        .catch((error) => console.error("Error fetching managers:", error));
-    }
-  }, []);
+          .then((response) => response.json())
+          .then((data) => {
+            // Filter only the managers from the response
+            const managers = data?.data?.employees.filter(
+              (emp) => emp.role === "manager"
+            );
+            setManagers(managers);
+          })
+          .catch((error) => console.error("Error fetching managers:", error));
+      }
+    }, []);
 
-  console.log(managers);
-
+    console.log(managers);
+  }
   // Add Managers
 
   const handleManagerInputChange = (event) => {
@@ -366,39 +374,40 @@ export function AdminDashboard() {
       emailOrExtension: managerData.emailOrExtension,
       departmentsManaged: [managerData.departmentsManaged], // Send the department ID as an array
     };
-    try {
-      const accessToken = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("accessToken"))
-        ?.split("=")[1];
-      const response = await fetch(
-        `${API_URL}api/v1/employees/UpdateManagerDep`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify(managerDataToSend),
+    if (typeof window !== "undefined") {
+      try {
+        const accessToken = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("accessToken"))
+          ?.split("=")[1];
+        const response = await fetch(
+          `${API_URL}api/v1/employees/UpdateManagerDep`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify(managerDataToSend),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to create manager");
         }
-      );
 
-      if (!response.ok) {
-        throw new Error("Failed to create manager");
+        const data = await response.json();
+        console.log("Manager created successfully:", data);
+
+        // Reset form fields
+        setManagerData({ emailOrExtension: "", departmentsManaged: "" });
+        closeModal(); // Close the modal after successful creation
+      } catch (error) {
+        console.error("Error:", error);
+        // Handle error (e.g., show a notification to the user)
       }
-
-      const data = await response.json();
-      console.log("Manager created successfully:", data);
-
-      // Reset form fields
-      setManagerData({ emailOrExtension: "", departmentsManaged: "" });
-      closeModal(); // Close the modal after successful creation
-    } catch (error) {
-      console.error("Error:", error);
-      // Handle error (e.g., show a notification to the user)
     }
   };
-
   // Render access denied message for non-admins
   if (!isAdmin) {
     return (
@@ -441,16 +450,19 @@ export function AdminDashboard() {
             href="/ticket-history"
             isExpanded={isExpanded}
           />
+
           <SidebarItem
             icon={<LogOut size={20} />}
             label="Log out"
             href="/"
             isExpanded={isExpanded}
             onClick={() => {
-              document.cookie =
-                "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
-              // Redirect to the login page
-              router.push("/");
+              if (typeof window !== "undefined") {
+                document.cookie =
+                  "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
+                // Redirect to the login page
+                router.push("/");
+              }
             }}
           />
         </nav>

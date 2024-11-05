@@ -32,8 +32,10 @@ export function TicketManagement() {
 
   useEffect(() => {
     setMounted(true);
-    document.body.style.setProperty("--color-primary", "#1A1C23");
-    document.body.style.setProperty("--color-secondary", "#C19E7B");
+    if (typeof window !== "undefined") {
+      document.body.style.setProperty("--color-primary", "#1A1C23");
+      document.body.style.setProperty("--color-secondary", "#C19E7B");
+    }
   }, []);
 
   const toggleTheme = () => {
@@ -85,58 +87,58 @@ export function TicketManagement() {
     setIsPopupOpen(false);
     setSelectedTicket(null); // Reset selected ticket when closing
   };
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      const accessToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken"))
+        ?.split("=")[1];
 
-  useEffect(() => {
-    const accessToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken"))
-      ?.split("=")[1];
+      if (accessToken) {
+        const payload = decodeTokenPayload(accessToken);
+        const employeeId = payload?.id;
 
-    if (accessToken) {
-      const payload = decodeTokenPayload(accessToken);
-      const employeeId = payload?.id;
-
-      if (employeeId) {
-        fetch(`${API_URL}/api/v1/employees/`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const employees = data?.data?.employees || [];
-            const employee = employees.find((emp) => emp._id === employeeId);
-
-            if (employee) {
-              setEmployeeData(employee);
-
-              fetch(`${API_URL}/api/v1/tickets/getMyTickets`, {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
-              })
-                .then((response) => response.json())
-                .then((ticketData) => {
-                  setTicketsData(ticketData?.data?.tickets || []);
-                })
-                .catch((error) =>
-                  console.error("Error fetching tickets data:", error)
-                );
-            } else {
-              console.error("Employee not found.");
-            }
+        if (employeeId) {
+          fetch(`${API_URL}/api/v1/employees/`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           })
-          .catch((error) =>
-            console.error("Error fetching employee data:", error)
-          );
-      } else {
-        console.error("Invalid token payload. No employee ID found.");
-      }
-    } else {
-      console.log("No access token found.");
-    }
-  }, []);
+            .then((response) => response.json())
+            .then((data) => {
+              const employees = data?.data?.employees || [];
+              const employee = employees.find((emp) => emp._id === employeeId);
 
+              if (employee) {
+                setEmployeeData(employee);
+
+                fetch(`${API_URL}/api/v1/tickets/getMyTickets`, {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                })
+                  .then((response) => response.json())
+                  .then((ticketData) => {
+                    setTicketsData(ticketData?.data?.tickets || []);
+                  })
+                  .catch((error) =>
+                    console.error("Error fetching tickets data:", error)
+                  );
+              } else {
+                console.error("Employee not found.");
+              }
+            })
+            .catch((error) =>
+              console.error("Error fetching employee data:", error)
+            );
+        } else {
+          console.error("Invalid token payload. No employee ID found.");
+        }
+      } else {
+        console.log("No access token found.");
+      }
+    }, []);
+  }
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -188,10 +190,12 @@ export function TicketManagement() {
             href="/"
             isExpanded={isExpanded}
             onClick={() => {
-              document.cookie =
-                "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
-              // Redirect to the login page
-              router.push("/");
+              if (typeof window !== "undefined") {
+                document.cookie =
+                  "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
+                // Redirect to the login page
+                router.push("/");
+              }
             }}
           />
         </nav>

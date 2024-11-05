@@ -33,8 +33,10 @@ export function TicketManagement() {
 
   useEffect(() => {
     setMounted(true);
-    document.body.style.setProperty("--color-primary", "#1A1C23");
-    document.body.style.setProperty("--color-secondary", "#C19E7B");
+    if (typeof window !== "undefined") {
+      document.body.style.setProperty("--color-primary", "#1A1C23");
+      document.body.style.setProperty("--color-secondary", "#C19E7B");
+    }
   }, []);
 
   const toggleTheme = () => {
@@ -86,78 +88,78 @@ export function TicketManagement() {
     setIsPopupOpen(false);
     setSelectedTicket(null); // Clear selected ticket when closing
   };
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      const accessToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken"))
+        ?.split("=")[1];
 
-  useEffect(() => {
-    const accessToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken"))
-      ?.split("=")[1];
+      if (accessToken) {
+        const payload = decodeTokenPayload(accessToken);
+        const employeeId = payload?.id;
 
-    if (accessToken) {
-      const payload = decodeTokenPayload(accessToken);
-      const employeeId = payload?.id;
-
-      if (employeeId) {
-        fetch(`${API_URL}/api/v1/employees/`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            const employees = data?.data?.employees || [];
-            const employee = employees.find((emp) => emp._id === employeeId);
-
-            if (employee) {
-              setEmployeeData(employee);
-              const managedDepartments = employee.departmentsManaged; // Get the departments managed by the employee
-
-              // Fetch tickets for each managed department concurrently
-              const fetchDepartmentTickets = async (deptId) => {
-                try {
-                  const response = await fetch(
-                    `${API_URL}/api/v1/departments/${deptId}`,
-                    {
-                      headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                      },
-                    }
-                  );
-                  const departmentData = await response.json();
-                  const departmentTickets =
-                    departmentData.data.department.tickets || [];
-                  setTicketsData((prevTickets) => [
-                    ...prevTickets,
-                    ...departmentTickets,
-                  ]); // Add the department tickets to ticketsData
-                } catch (error) {
-                  console.error("Error fetching department data:", error);
-                }
-              };
-
-              // Check if the employee is a manager or admin
-              if (employee.role === "manager" || employee.role === "admin") {
-                managedDepartments.forEach((deptId) => {
-                  fetchDepartmentTickets(deptId);
-                });
-              } else {
-                console.error("Employee is neither a manager nor an admin.");
-              }
-            } else {
-              console.error("Employee not found.");
-            }
+        if (employeeId) {
+          fetch(`${API_URL}/api/v1/employees/`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           })
-          .catch((error) =>
-            console.error("Error fetching employee data:", error)
-          );
-      } else {
-        console.error("Invalid token payload. No employee ID found.");
-      }
-    } else {
-      console.log("No access token found.");
-    }
-  }, []);
+            .then((response) => response.json())
+            .then((data) => {
+              const employees = data?.data?.employees || [];
+              const employee = employees.find((emp) => emp._id === employeeId);
 
+              if (employee) {
+                setEmployeeData(employee);
+                const managedDepartments = employee.departmentsManaged; // Get the departments managed by the employee
+
+                // Fetch tickets for each managed department concurrently
+                const fetchDepartmentTickets = async (deptId) => {
+                  try {
+                    const response = await fetch(
+                      `${API_URL}/api/v1/departments/${deptId}`,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${accessToken}`,
+                        },
+                      }
+                    );
+                    const departmentData = await response.json();
+                    const departmentTickets =
+                      departmentData.data.department.tickets || [];
+                    setTicketsData((prevTickets) => [
+                      ...prevTickets,
+                      ...departmentTickets,
+                    ]); // Add the department tickets to ticketsData
+                  } catch (error) {
+                    console.error("Error fetching department data:", error);
+                  }
+                };
+
+                // Check if the employee is a manager or admin
+                if (employee.role === "manager" || employee.role === "admin") {
+                  managedDepartments.forEach((deptId) => {
+                    fetchDepartmentTickets(deptId);
+                  });
+                } else {
+                  console.error("Employee is neither a manager nor an admin.");
+                }
+              } else {
+                console.error("Employee not found.");
+              }
+            })
+            .catch((error) =>
+              console.error("Error fetching employee data:", error)
+            );
+        } else {
+          console.error("Invalid token payload. No employee ID found.");
+        }
+      } else {
+        console.log("No access token found.");
+      }
+    }, []);
+  }
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -203,10 +205,12 @@ export function TicketManagement() {
             href="/"
             isExpanded={isExpanded}
             onClick={() => {
-              document.cookie =
-                "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
-              // Redirect to the login page
-              router.push("/");
+              if (typeof window !== "undefined") {
+                document.cookie =
+                  "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
+                // Redirect to the login page
+                router.push("/");
+              }
             }}
           />
         </nav>

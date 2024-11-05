@@ -133,54 +133,57 @@ export function AppleCardsCarouselDemo() {
       return null;
     }
   };
+  if (typeof window !== "undefined") {
+    useEffect(() => {
+      // Retrieve the access token from cookies
 
-  useEffect(() => {
-    // Retrieve the access token from cookies
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken="))
+        ?.split("=")[1];
 
-    if (!token) {
-      setError("Access token not found");
-      setLoading(false);
-      return;
-    }
-
-    // Optionally, decode the token payload (if needed for other purposes)
-    const payload = decodeTokenPayload(token);
-    console.log("Decoded token payload:", payload);
-
-    // Fetch departments using the token in headers
-    fetch(`${API_URL}/api/v1/departments/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch departments");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        // Extract department names and map them into the data array
-        const departmentNames = data.data.departments.map((dept) => dept.name);
-        setData((prevData) =>
-          prevData.map((card, index) => ({
-            ...card,
-            title: departmentNames[index] || "",
-          }))
-        );
+      if (!token) {
+        setError("Access token not found");
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching departments:", error);
-        setError("Failed to load departments.");
-        setLoading(false);
-      });
-  }, []);
+        return;
+      }
 
+      // Optionally, decode the token payload (if needed for other purposes)
+      const payload = decodeTokenPayload(token);
+      console.log("Decoded token payload:", payload);
+
+      // Fetch departments using the token in headers
+      fetch(`${API_URL}/api/v1/departments/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch departments");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Extract department names and map them into the data array
+          const departmentNames = data.data.departments.map(
+            (dept) => dept.name
+          );
+          setData((prevData) =>
+            prevData.map((card, index) => ({
+              ...card,
+              title: departmentNames[index] || "",
+            }))
+          );
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching departments:", error);
+          setError("Failed to load departments.");
+          setLoading(false);
+        });
+    }, []);
+  }
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
@@ -241,10 +244,12 @@ export function SidebarDemo() {
       icon: <LogOut className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
       onClick: () => {
         // Clear the access token cookie
-        document.cookie =
-          "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
-        // Redirect to the login page
-        router.push("/");
+        if (typeof window !== "undefined") {
+          document.cookie =
+            "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
+          // Redirect to the login page
+          router.push("/");
+        }
       },
     },
   ];

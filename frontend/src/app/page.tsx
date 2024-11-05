@@ -54,10 +54,12 @@ export function AuroraBackgroundDemo() {
   // Coded Added by Seif to Connect Backend with Frontend (DON'T MODIFY PLEASE.)
 
   function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-    return null;
+    if (typeof window !== "undefined") {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
+    }
   }
 
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -133,13 +135,14 @@ export function AuroraBackgroundDemo() {
 }
 
 export default function Home() {
-  
   // Code Written By Seif to Connect Backend with Frontend (DON'T MODIFY)
   function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
-    return null;
+    if (typeof window !== "undefined") {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
+    }
   }
   // Retrieve token from cookies
   const accessToken = getCookie("accessToken");

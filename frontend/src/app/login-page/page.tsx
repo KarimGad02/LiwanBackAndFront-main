@@ -68,7 +68,9 @@ export default function Login() {
       console.log("Success data:", data);
       if (data.accessToken) {
         // Cookie option
-        document.cookie = `accessToken=${data.accessToken}; path=/; secure`;
+        if (typeof window !== "undefined") {
+          document.cookie = `accessToken=${data.accessToken}; path=/; secure`;
+        }
       }
       const userName = data.data.employee.fullName || "User"; // Use "User" as a fallback if name is missing
       setSuccessMessage(`Welcome back, ${userName}, thank you for logging in.`);
