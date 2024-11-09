@@ -1,5 +1,5 @@
 "use client";
-//test
+
 import React, { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { IconChevronLeft, IconSun, IconMoon, IconUpload } from "@tabler/icons-react";
@@ -42,7 +42,8 @@ const TicketResponsePage = () => {
   const pathname = usePathname(); // Get the current path
 
   useEffect(() => {
-    if (pathname.includes("/tickets/")) {  // Check if we're on the ticket page
+    if (pathname.includes("/profile")) {  // Check if we're on the ticket page
+    } else {
       setIsClient(true);
       fetchTicket();
     }
