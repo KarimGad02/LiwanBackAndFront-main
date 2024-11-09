@@ -43,8 +43,10 @@ const TicketResponsePage = () => {
 
   useEffect(() => {
     console.log(pathname);
-    if (pathname.includes("/profile")) {  // Check if we're on the ticket page
+    if (pathname.includes("/profile")) { 
+      console.log("CONDITION TRUE"); // Check if we're on the ticket page
     } else {
+      console.log("CONDITION FALSE");
       setIsClient(true);
       fetchTicket();
     }
