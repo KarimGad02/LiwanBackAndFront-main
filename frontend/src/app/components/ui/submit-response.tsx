@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { IconChevronLeft, IconSun, IconMoon, IconUpload } from "@tabler/icons-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 
 interface Ticket {
   _id: string;
@@ -39,21 +39,16 @@ const TicketResponsePage = () => {
   const params = useParams();
   const router = useRouter();
   const ticketId = params.ticketId;
+  const pathname = usePathname(); // Get the current path
 
   useEffect(() => {
-    setIsClient(true);
-    fetchTicket();
-  }, []);
+    if (pathname.includes("/tickets/")) {  // Check if we're on the ticket page
+      setIsClient(true);
+      fetchTicket();
+    }
+  }, [pathname]); // Dependency on pathname to trigger the effect when the route changes
 
   const fetchTicket = async () => {
-
-    const isValidObjectId = /^[a-fA-F0-9]{24}$/.test(ticketId);
-
-    if (!isValidObjectId) {
-      setError("Invalid ticket ID");
-      setIsLoading(false);
-      return; // Stop further execution if ticketId is not valid
-    }
 
     try {
       const accessToken = document.cookie
