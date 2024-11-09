@@ -153,7 +153,7 @@ export function AppleCardsCarouselDemo() {
       console.log("Decoded token payload:", payload);
 
       // Fetch departments using the token in headers
-      fetch(`${API_URL}/api/v1/departments/`, {
+      fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

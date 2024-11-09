@@ -118,7 +118,7 @@ export function TicketManagement() {
                 const fetchDepartmentTickets = async (deptId) => {
                   try {
                     const response = await fetch(
-                      `${API_URL}/api/v1/departments/${deptId}`,
+                      `https://liwan-back.vercel.app/api/v1/departments/${deptId}`,
                       {
                         headers: {
                           Authorization: `Bearer ${accessToken}`,

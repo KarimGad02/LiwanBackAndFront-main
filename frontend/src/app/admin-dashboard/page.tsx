@@ -164,7 +164,7 @@ export function AdminDashboard() {
   if (typeof window !== "undefined") {
     useEffect(() => {
       if (isAdmin) {
-        fetch(`${API_URL}/api/v1/departments/`, {
+        fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
           headers: {
             Authorization: `Bearer ${
               document.cookie
@@ -272,7 +272,7 @@ export function AdminDashboard() {
         // Make the DELETE request to the API endpoint
 
         const response = await fetch(
-          `${API_URL}/api/v1/departments/${departmentId}`,
+          `https://liwan-back.vercel.app/api/v1/departments/${departmentId}`,
           {
             method: "DELETE",
             headers: {
@@ -305,7 +305,7 @@ export function AdminDashboard() {
   const fetchDepartments = async () => {
     if (typeof window !== "undefined") {
       try {
-        const response = await fetch(`${API_URL}/api/v1/departments/`, {
+        const response = await fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
           headers: {
             Authorization: `Bearer ${
               document.cookie
