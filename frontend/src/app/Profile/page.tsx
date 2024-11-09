@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeProvider, useTheme } from "next-themes";
+import { usePathname, useRouter } from "next/navigation";
 
 // Separate the personal information form into its own component
 const PersonalInformationForm = () => {
@@ -14,6 +15,8 @@ const PersonalInformationForm = () => {
   const [extension, setExtension] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const pathname = usePathname();
 
   const decodeTokenPayload = (token) => {
     try {
@@ -27,6 +30,12 @@ const PersonalInformationForm = () => {
   };
 
   useEffect(() => {
+    // Check if we're on the profile page
+    if (!pathname.includes('profile')) {
+      router.replace('/dashboard');
+      return;
+    }
+
     const fetchEmployeeData = async () => {
       if (typeof window === "undefined") return;
       try {
@@ -59,6 +68,11 @@ const PersonalInformationForm = () => {
         });
 
         if (!response.ok) {
+          if (response.status === 401) {
+            // Handle unauthorized access
+            router.push('/login');
+            return;
+          }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
@@ -84,14 +98,24 @@ const PersonalInformationForm = () => {
     };
 
     fetchEmployeeData();
-  }, []);
+  }, [pathname, router]);
 
   if (loading) {
-    return <div className="text-center py-4">Loading...2</div>;
+    return <div className="text-center py-4">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-red-500 text-center py-4">{error}</div>;
+    return (
+      <div className="text-red-500 text-center py-4">
+        <p>{error}</p>
+        <button 
+          onClick={() => window.location.reload()} 
+          className="mt-4 px-4 py-2 bg-[#C8A97E] text-white rounded hover:bg-[#B69A6F]"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -147,48 +171,52 @@ export default function PersonalInformationPage() {
   const [isExpanded, setIsExpanded] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Early return if we're not on the profile page
+  if (!pathname.includes('profile')) {
+    return null;
+  }
 
   if (!mounted) {
     return null;
   }
 
   return (
-    <ThemeProvider attribute="class">
-      <div className="flex h-screen bg-Primary">
-        <Sidebar />
-        <div className="flex-1 relative">
-          <main
-            className={`flex-1 p-8 overflow-auto dark:bg-neutral-950 bg-neutral-200 text-Primary dark:text-neutral-200 transition-all duration-300 ease-in-out ${
-              isExpanded ? "ml-[150px]" : "ml-[30px]"
-            }`}
-          >
-            <div className="max-w-4xl mx-auto">
-              <h1 className="text-3xl font-bold mb-8">Personal Information</h1>
-              <AnimatePresence mode="wait">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <PersonalInformationForm />
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </main>
+    <div className="flex h-screen bg-Primary">
+      <Sidebar />
+      <div className="flex-1 relative">
+        <main
+          className={`flex-1 p-8 overflow-auto dark:bg-neutral-950 bg-neutral-200 text-Primary dark:text-neutral-200 transition-all duration-300 ease-in-out ${
+            isExpanded ? "ml-[150px]" : "ml-[30px]"
+          }`}
+        >
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-3xl font-bold mb-8">Personal Information</h1>
+            <AnimatePresence mode="wait">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PersonalInformationForm />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </main>
 
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="fixed bottom-4 left-4 p-2 rounded-full bg-Primary text-neutral-200 hover:bg-primary-foreground hover:text-Primary transition-colors duration-300"
-          >
-            {isExpanded ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
-          </button>
-        </div>
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="fixed bottom-4 left-4 p-2 rounded-full bg-Primary text-neutral-200 hover:bg-primary-foreground hover:text-Primary transition-colors duration-300"
+        >
+          {isExpanded ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
+        </button>
       </div>
-    </ThemeProvider>
+    </div>
   );
 }
