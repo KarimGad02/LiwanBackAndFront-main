@@ -42,6 +42,7 @@ const TicketResponsePage = () => {
   const pathname = usePathname(); // Get the current path
 
   useEffect(() => {
+    console.log(pathname);
     if (pathname.includes("/profile")) {  // Check if we're on the ticket page
     } else {
       setIsClient(true);
