@@ -190,7 +190,7 @@ export function AdminDashboard() {
 
     try {
       if (typeof window !== "undefined") {
-        const response = await fetch(`${API_URL}/api/v1/departments/`, {
+        const response = await fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
