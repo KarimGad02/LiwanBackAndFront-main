@@ -32,7 +32,7 @@ const PersonalInformationForm = () => {
   useEffect(() => {
     // Check if we're on the profile page
     if (!pathname.includes('profile')) {
-      router.replace('/dashboard');
+      router.replace('/profile');
       return;
     }
 
