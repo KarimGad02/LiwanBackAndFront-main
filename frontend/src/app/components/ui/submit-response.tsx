@@ -33,24 +33,33 @@ const TicketResponsePage = () => {
   const [isClient, setIsClient] = useState(false);
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [responseDescription, setResponseDescription] = useState("");
-  const [fileUploaded, setFileUplaoded] = useState<File | null>(null);
+  const [fileUploaded, setFileUploaded] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const params = useParams();
   const router = useRouter();
-  const ticketId = params.ticketId;
+  const ticketId = params.ticketId as string;
 
   useEffect(() => {
     setIsClient(true);
-    fetchTicket();
-  }, []);
+    if (ticketId) {
+      fetchTicket();
+    }
+  }, [ticketId]);
 
-  const fetchTicket = async () => {
-    try {
-      const accessToken = document.cookie
+  const getAccessToken = () => {
+    if (typeof document !== 'undefined') {
+      return document.cookie
         .split("; ")
         .find((row) => row.startsWith("accessToken"))
         ?.split("=")[1];
+    }
+    return null;
+  };
+
+  const fetchTicket = async () => {
+    try {
+      const accessToken = getAccessToken();
 
       if (!accessToken) {
         throw new Error("No access token found");
@@ -60,6 +69,7 @@ const TicketResponsePage = () => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+        cache: 'no-store'
       });
 
       if (!response.ok) {
@@ -68,7 +78,7 @@ const TicketResponsePage = () => {
 
       const data = await response.json();
       setTicket(data.data.ticket);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
@@ -77,35 +87,31 @@ const TicketResponsePage = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setFileUplaoded(event.target.files[0]);
+      setFileUploaded(event.target.files[0]);
     }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const accessToken = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("accessToken"))
-        ?.split("=")[1];
+      const accessToken = getAccessToken();
   
       if (!accessToken) {
         throw new Error("No access token found");
       }
   
-      // Create JSON payload
-      const payload = {
-        responseDescription,
-        fileUploaded,
-      };
+      const formData = new FormData();
+      formData.append('responseDescription', responseDescription);
+      if (fileUploaded) {
+        formData.append('fileUploaded', fileUploaded);
+      }
   
       const submitResponse = await fetch(`https://liwan-back.vercel.app/api/v1/tickets/${ticketId}`, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify(payload),
+        body: formData,
       });
   
       if (!submitResponse.ok) {
@@ -114,7 +120,7 @@ const TicketResponsePage = () => {
       }
   
       router.push("/ticket-history");
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     }
   };
