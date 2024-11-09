@@ -243,7 +243,7 @@ function TicketItem({ ticket, onView }) {
     <div className="p-4 rounded-lg bg-Primary shadow-lg hover:shadow-2xl shadow-black/50 hover:shadow-black text-neutral-200 duration-300">
       <div className="flex items-start space-x-4">
         <img
-          src="/Sidebar-icon.jpg"
+          src="/Sidebar-Icon.jpg"
           alt={createdBy?.fullName}
           className="w-10 h-10 rounded-full"
         />
@@ -329,7 +329,7 @@ function TicketDetailsPopup({ ticket, onClose }) {
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-start space-x-4">
             <img
-              src="/Sidebar-icon.jpg"
+              src="/Sidebar-Icon.jpg"
               alt={createdBy?.fullName || "User"}
               className="w-10 h-10 rounded-full"
             />

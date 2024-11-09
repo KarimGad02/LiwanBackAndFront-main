@@ -195,7 +195,7 @@ const Logo: React.FC = () => {
       className="cursor-pointer font-normal flex space-x-2 items-center text-sm text-neutral-100 py-1 relative z-20"
     >
       <Image
-        src="/Sidebar-icon.jpg"
+        src="/Sidebar-Icon.jpg"
         width={40}
         height={40}
         className="rounded-full"

@@ -430,7 +430,7 @@ export function AdminDashboard() {
         <div className="flex items-center mb-8">
           <Link href={"/profile"} className="flex items-center">
             <img
-              src="/Sidebar-icon.jpg"
+              src="/Sidebar-Icon.jpg"
               alt="Admin"
               className="w-10 h-10 rounded-full mr-3"
             />
