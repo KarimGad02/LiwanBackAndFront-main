@@ -39,22 +39,24 @@ const TicketResponsePage = () => {
   const params = useParams();
   const router = useRouter();
   const ticketId = params.ticketId;
-  const pathname = usePathname(); // Get the current path
 
   useEffect(() => {
-    console.log(pathname);
-    if (pathname.includes("/profile")) { 
-      setIsClient(true);
-      console.log("CONDITION TRUE"); // Check if we're on the ticket page
-      // return;
-    } else {
-      console.log("CONDITION FALSE");
-      setIsClient(true);
+    setIsClient(true);
+    // Only fetch ticket if we have a ticketId
+    if (ticketId && typeof ticketId === 'string') {
       fetchTicket();
+    } else {
+      // If no ticketId, redirect to appropriate page or show error
+      setIsLoading(false);
+      setError("Invalid ticket ID");
+      // Optional: Redirect to tickets page or home
+      // router.push('/tickets');
     }
-  }, [pathname]); // Dependency on pathname to trigger the effect when the route changes
+  }, [ticketId]);
 
   const fetchTicket = async () => {
+
+    if (!ticketId) return;
 
     try {
       const accessToken = document.cookie
@@ -94,6 +96,12 @@ const TicketResponsePage = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!ticketId) {
+      setError("No ticket ID available");
+      return;
+    }
+
     try {
       const accessToken = document.cookie
         .split("; ")
