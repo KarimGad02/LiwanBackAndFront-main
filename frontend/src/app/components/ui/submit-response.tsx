@@ -43,14 +43,14 @@ const TicketResponsePage = () => {
 
 
   useEffect(() => {
-    setIsClient(true);
     // Only proceed if we're on a ticket route
     if (!pathname.includes('profile') && pathname.includes('tickets')) {
       const ticketId = params.ticketId;
       if (ticketId && typeof ticketId === 'string') {
+        setIsClient(true);
         fetchTicket(ticketId);
       } else {
-        setIsLoading(false);
+        // setIsLoading(false);
         setError("Invalid ticket ID");
       }
     }
