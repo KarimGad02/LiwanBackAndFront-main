@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { API_URL } from "../../../config";
+
 import {
   Sidebar as SidebarComponent,
   SidebarBody,
@@ -307,7 +308,7 @@ export const Sidebar = ({
 export const Logo = () => {
   return (
     <Link
-      href="/Profile"
+      href="/profile"
       className="font-normal flex space-x-2 items-center text-sm text-neutral-100 py-1 relative z-20"
     >
       <Image

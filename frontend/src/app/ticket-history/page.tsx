@@ -190,7 +190,7 @@ export function TicketManagement() {
         onMouseLeave={() => setIsExpanded(false)}
       >
         <div className="flex items-center p-4 mb-8">
-          <Link href={"/Profile"} className="flex items-center">
+          <Link href={"/profile"} className="flex items-center">
             <img
               src="/Sidebar-icon.jpg"
               alt="Admin"
