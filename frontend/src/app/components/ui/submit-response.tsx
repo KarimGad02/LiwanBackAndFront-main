@@ -46,6 +46,15 @@ const TicketResponsePage = () => {
   }, []);
 
   const fetchTicket = async () => {
+
+    const isValidObjectId = /^[a-fA-F0-9]{24}$/.test(ticketId);
+
+    if (!isValidObjectId) {
+      setError("Invalid ticket ID");
+      setIsLoading(false);
+      return; // Stop further execution if ticketId is not valid
+    }
+
     try {
       const accessToken = document.cookie
         .split("; ")
@@ -55,6 +64,7 @@ const TicketResponsePage = () => {
       if (!accessToken) {
         throw new Error("No access token found");
       }
+
 
       const response = await fetch(`https://liwan-back.vercel.app/api/v1/tickets/${ticketId}`, {
         headers: {
