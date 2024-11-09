@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { IconChevronLeft, IconSun, IconMoon, IconUpload } from "@tabler/icons-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useParams, useRouter, usePathname } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface Ticket {
   _id: string;
@@ -39,24 +39,13 @@ const TicketResponsePage = () => {
   const params = useParams();
   const router = useRouter();
   const ticketId = params.ticketId;
-  const pathname = usePathname();
-
 
   useEffect(() => {
-    // Only proceed if we're on a ticket route
-    if (!pathname.includes('profile') && pathname.includes('tickets')) {
-      const ticketId = params.ticketId;
-      if (ticketId && typeof ticketId === 'string') {
-        setIsClient(true);
-        fetchTicket(ticketId);
-      } else {
-        // setIsLoading(false);
-        setError("Invalid ticket ID");
-      }
-    }
-  }, [params]);
+    setIsClient(true);
+    fetchTicket();
+  }, []);
 
-  const fetchTicket = async (ticketId: string) => {
+  const fetchTicket = async () => {
     try {
       const accessToken = document.cookie
         .split("; ")
@@ -79,18 +68,12 @@ const TicketResponsePage = () => {
 
       const data = await response.json();
       setTicket(data.data.ticket);
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
-
-  // If we're not on a ticket route, don't render anything
-  if (pathname.includes('profile') || !pathname.includes('tickets')) {
-    return null;
-  }
-
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -100,12 +83,6 @@ const TicketResponsePage = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!ticketId) {
-      setError("No ticket ID available");
-      return;
-    }
-
     try {
       const accessToken = document.cookie
         .split("; ")
@@ -143,7 +120,7 @@ const TicketResponsePage = () => {
   };
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...1</div>;
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
   if (error) {
