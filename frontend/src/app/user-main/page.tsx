@@ -94,7 +94,7 @@ export function AppleCardsCarouselDemo() {
       });
   }, []);
   }
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Loading...3</div>;
   if (error) return <div>{error}</div>;
 
   const cards = data.map((card, index) => (

@@ -44,6 +44,7 @@ const TicketResponsePage = () => {
   useEffect(() => {
     console.log(pathname);
     if (pathname.includes("/profile")) { 
+      setIsClient(true);
       console.log("CONDITION TRUE"); // Check if we're on the ticket page
     } else {
       console.log("CONDITION FALSE");
@@ -129,7 +130,7 @@ const TicketResponsePage = () => {
   };
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    return <div className="min-h-screen flex items-center justify-center">Loading...1</div>;
   }
 
   if (error) {

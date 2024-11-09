@@ -87,7 +87,7 @@ const PersonalInformationForm = () => {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-4">Loading...</div>;
+    return <div className="text-center py-4">Loading...2</div>;
   }
 
   if (error) {
