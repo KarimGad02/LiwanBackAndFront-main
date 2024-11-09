@@ -20,7 +20,7 @@ const app = express();
 
 app.enable("trust-proxy");
 const corsOptions = {
-  origin: 'https://liwan.mavoid.com',  // explicitly specify your frontend URL
+  origin: 'https://liwan-back-and-front-main-beta.vercel.app',  // explicitly specify your frontend URL
   credentials: true,                // allow credentials (cookies) in requests
 };
 app.use(cors(corsOptions));
@@ -51,7 +51,7 @@ app.use(express.json({ limit: "16mb" })); //limits the size of the body to 16mb
 app.use(compression());
 
 
-app.options('https://liwan.mavoid.com', cors(corsOptions));  // handle all OPTIONS requests
+app.options('https://liwan-back-and-front-main-beta.vercel.app', cors(corsOptions));  // handle all OPTIONS requests
 
 //test middleware
 app.use((req, res, next) => {

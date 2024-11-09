@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { useMotionTemplate, useMotionValue, motion } from "framer-motion";
-import { API_URL } from "../../../config";
+
 
 export default function Login() {
   const radius = 100;
@@ -19,6 +19,7 @@ export default function Login() {
   const mouseXPassword = useMotionValue(0);
   const mouseYPassword = useMotionValue(0);
 
+ 
   function handleMouseMove(
     event: React.MouseEvent<HTMLDivElement>,
     mouseX: any,
@@ -30,31 +31,35 @@ export default function Login() {
     mouseY.set(clientY - top);
   }
 
-  // Coded Added by Seif to Connect Backend with Frontend (DON'T MODIFY PLEASE.)
-
+   // Coded Added by Seif to Connect Backend with Frontend (DON'T MODIFY PLEASE.)
+   
   const [successMessage, setSuccessMessage] = useState("");
   const [emailOrExtension, setEmailOrExtension] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`https://liwan-back.vercel.app/api/v1/employees/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": `https://liwan-back.vercel.app`, // Frontend URL
-          "Access-Control-Allow-Credentials": "true", // Allow credentials
-        },
-        body: JSON.stringify({
-          emailOrExtension,
-          password,
-        }),
-      });
+      const response = await fetch(
+        "http://127.0.0.1:5000/api/v1/employees/login",
+        {
+          method: "POST",
+          credentials: 'include',
+          headers: {
+            "Content-Type": "application/json",
+            'Access-Control-Allow-Origin': 'http://127.0.0.1:3000/',  // Frontend URL
+            'Access-Control-Allow-Credentials': 'true',              // Allow credentials
+          },
+          body: JSON.stringify({
+            emailOrExtension,
+            password,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -66,10 +71,10 @@ export default function Login() {
 
       const data = await response.json();
       console.log("Success data:", data);
-      if (data.accessToken) {
+      if (data.accessToken) {  
         // Cookie option
         if (typeof window !== "undefined") {
-          document.cookie = `accessToken=${data.accessToken}; path=/; secure`;
+        document.cookie = `accessToken=${data.accessToken}; path=/; secure`;
         }
       }
       const userName = data.data.employee.fullName || "User"; // Use "User" as a fallback if name is missing
@@ -92,9 +97,7 @@ export default function Login() {
         <p className="text-center text-slate-500 mb-5">
           Login using your assigned Liwan email or Extension number and password
         </p>
-        {successMessage && (
-          <p className="text-green-700 mb-2">{successMessage}</p>
-        )}
+        {successMessage && <p className="text-green-700 mb-2">{successMessage}</p>} 
         {error && <p style={{ color: "red" }}>{error}</p>}
         <form className="space-y-4" onSubmit={handleLogin}>
           <div>

@@ -4,22 +4,13 @@ import { API_URL } from "../../../../config";
 import {
   Moon,
   Sun,
-  Home,
-  User,
-  Ticket,
-  History,
-  Settings,
-  LogOut,
-  ChevronUp,
-  ChevronDown,
   X,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ThemeProvider, useTheme } from "next-themes";
-import { GrDashboard } from "react-icons/gr";
-import { IconDashboard, IconLayoutDashboard } from "@tabler/icons-react";
-import { useRouter } from "next/navigation"; // Add this import
+import { useRouter } from "next/navigation";
+import { useSSE } from '../../../hooks/useSSE';
 
 export function TicketManagement() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,13 +19,33 @@ export function TicketManagement() {
   const [mounted, setMounted] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const router = useRouter(); // Initialize router here
+  const router = useRouter();
+
+  const [employeeData, setEmployeeData] = useState(null);
+  const [ticketsData, setTicketsData] = useState([]);
+  const [showPending, setShowPending] = useState(false);
+  const [showCompleted, setShowCompleted] = useState(false);
+  const [tickets, setTickets] = useState([]);
+
+  const handleTicketCreated = (newTicket) => {
+    setTickets(prevTickets => [newTicket, ...prevTickets]);
+  };
+
+  const handleTicketUpdated = (updatedTicket) => {
+    setTickets(prevTickets => 
+      prevTickets.map(ticket => 
+        ticket._id === updatedTicket._id ? updatedTicket : ticket
+      )
+    );
+  };
+
+  const { sseStatus, sseError } = useSSE(handleTicketCreated, handleTicketUpdated);
 
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined") {
-      document.body.style.setProperty("--color-primary", "#1A1C23");
-      document.body.style.setProperty("--color-secondary", "#C19E7B");
+    document.body.style.setProperty("--color-primary", "#1A1C23");
+    document.body.style.setProperty("--color-secondary", "#C19E7B");
     }
   }, []);
 
@@ -63,156 +74,80 @@ export function TicketManagement() {
     }
   };
 
-  const [employeeData, setEmployeeData] = useState(null);
-  const [ticketsData, setTicketsData] = useState([]);
-  const [viewedTicket, setViewedTicket] = useState(null);
-  const [showPending, setShowPending] = useState(false);
-  const [showCompleted, setShowCompleted] = useState(false);
-
-  // Function to filter tickets based on status
   const filterTickets = () => {
     if (showPending)
       return ticketsData.filter((ticket) => ticket.status === "pending");
     if (showCompleted)
       return ticketsData.filter((ticket) => ticket.status === "completed");
-    return ticketsData; // Show all tickets by default
+    return ticketsData;
   };
 
   const handleViewTicket = (ticket) => {
-    setSelectedTicket(ticket); // Set the selected ticket here
-    setIsPopupOpen(true); // Open the popup
+    setSelectedTicket(ticket);
+    setIsPopupOpen(true);
   };
 
   const handleClosePopup = () => {
     setIsPopupOpen(false);
-    setSelectedTicket(null); // Reset selected ticket when closing
+    setSelectedTicket(null);
   };
   if (typeof window !== "undefined") {
-    useEffect(() => {
-      const accessToken = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("accessToken"))
-        ?.split("=")[1];
+  useEffect(() => {
+    const accessToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken"))
+      ?.split("=")[1];
 
-      if (accessToken) {
-        const payload = decodeTokenPayload(accessToken);
-        const employeeId = payload?.id;
+    if (accessToken) {
+      const payload = decodeTokenPayload(accessToken);
+      const employeeId = payload?.id;
 
-        if (employeeId) {
-          fetch(`${API_URL}/api/v1/employees/`, {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              const employees = data?.data?.employees || [];
-              const employee = employees.find((emp) => emp._id === employeeId);
+      if (employeeId) {
+        fetch("https://liwan-back.vercel.app/api/v1/employees/", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const employees = data?.data?.employees || [];
+            const employee = employees.find((emp) => emp._id === employeeId);
 
-              if (employee) {
-                setEmployeeData(employee);
+            if (employee) {
+              setEmployeeData(employee);
 
-                fetch(`${API_URL}/api/v1/tickets/getMyTickets`, {
-                  headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                  },
+              fetch("https://liwan-back.vercel.app/api/v1/tickets/getMyTickets", {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              })
+                .then((response) => response.json())
+                .then((ticketData) => {
+                  setTicketsData(ticketData?.data?.tickets || []);
                 })
-                  .then((response) => response.json())
-                  .then((ticketData) => {
-                    setTicketsData(ticketData?.data?.tickets || []);
-                  })
-                  .catch((error) =>
-                    console.error("Error fetching tickets data:", error)
-                  );
-              } else {
-                console.error("Employee not found.");
-              }
-            })
-            .catch((error) =>
-              console.error("Error fetching employee data:", error)
-            );
-        } else {
-          console.error("Invalid token payload. No employee ID found.");
-        }
+                .catch((error) =>
+                  console.error("Error fetching tickets data:", error)
+                );
+            } else {
+              console.error("Employee not found.");
+            }
+          })
+          .catch((error) =>
+            console.error("Error fetching employee data:", error)
+          );
       } else {
-        console.log("No access token found.");
+        console.error("Invalid token payload. No employee ID found.");
       }
-    }, []);
+    } else {
+      console.log("No access token found.");
+    }
+  }, []);
   }
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-full dark:bg-neutral-950 bg-Primary text-neutral-200 p-4 transition-all duration-300 ease-in-out z-10 flex flex-col ${
-          isExpanded ? "w-[300px]" : "w-[72px]"
-        }`}
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
-      >
-        <div className="flex items-center mb-8">
-          <Link href={"/Profile"} className="flex items-center">
-            <img
-              src="/Sidebar-icon.jpg"
-              alt="Admin"
-              className="w-10 h-10 rounded-full mr-3"
-            />
-            {isExpanded && <span className="text-xl font-semibold">Admin</span>}
-          </Link>
-        </div>
-        <nav className="flex-grow">
-          <SidebarItem
-            icon={<Home size={20} />}
-            label="Home"
-            href="/user-main"
-            isExpanded={isExpanded}
-          />
-          <SidebarItem
-            icon={<Home size={20} />}
-            label="Assigned To"
-            href="/tickets-assigned"
-            isExpanded={isExpanded}
-          />
-          <SidebarItem
-            icon={<History size={20} />}
-            label="History"
-            href="/ticket-history"
-            isExpanded={isExpanded}
-          />
-          <SidebarItem
-            icon={<IconLayoutDashboard size={20} />}
-            label="Admin Dashboard"
-            href="/admin-dashboard"
-            isExpanded={isExpanded}
-          />
-          <SidebarItem
-            icon={<LogOut size={20} />}
-            label="Log out"
-            href="/"
-            isExpanded={isExpanded}
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                document.cookie =
-                  "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
-                // Redirect to the login page
-                router.push("/");
-              }
-            }}
-          />
-        </nav>
-        <div className="mt-auto">
-          <SidebarItem
-            icon={themeIcon}
-            label={theme === "dark" ? "Light Mode" : "Dark Mode"}
-            onClick={toggleTheme}
-            isExpanded={isExpanded}
-          />
-        </div>
-      </aside>
-
-      {/* Main content */}
       <main
         className={`flex-1 p-8 bg-neutral-100 dark:bg-Primary overflow-auto transition-all duration-300 ease-in-out ${
-          isExpanded ? "ml-[300px]" : "ml-[72px]"
+          isExpanded ? "ml-[150px]" : "ml-[40px]"
         }`}
       >
         <div className="max-w-4xl mx-auto">
@@ -286,7 +221,6 @@ export function TicketManagement() {
         </div>
       </main>
 
-      {/* Ticket Details Popup */}
       <AnimatePresence>
         {isPopupOpen && selectedTicket && (
           <TicketDetailsPopup
@@ -300,11 +234,7 @@ export function TicketManagement() {
 }
 
 function TicketItem({ ticket, onView }) {
-  // Extract necessary information from the ticket object
-  const { title, description, createdBy, createdAt, assignedTo, status } =
-    ticket;
-
-  // Format the created date
+  const { title, description, createdBy, createdAt, assignedTo, status, fileUploaded } = ticket;
   const createdDate = new Date(createdAt).toLocaleDateString();
 
   return (
@@ -319,17 +249,14 @@ function TicketItem({ ticket, onView }) {
           <div className="flex justify-between items-start">
             <div>
               <h3 className="font-semibold">{title}</h3>
-              <p className="text-sm opacity-80">{createdBy?.fullName}</p>{" "}
-              {/* Display full name of the creator */}
+              <p className="text-sm opacity-80">{createdBy?.fullName}</p>
             </div>
             <span className="text-sm opacity-80 font-semibold">
               {createdDate}
-            </span>{" "}
-            {/* Display created date */}
+            </span>
           </div>
           <p className="mt-2 text-sm">{description}</p>
-          <p className="mt-1 text-sm">Assigned to: {assignedTo?.name}</p>{" "}
-          {/* Display the assigned department */}
+          <p className="mt-1 text-sm">Assigned to: {assignedTo?.name}</p>
           <span
             className={`mt-2 inline-block px-2 py-1 rounded-full text-xs font-semibold ${
               status === "pending"
@@ -339,6 +266,17 @@ function TicketItem({ ticket, onView }) {
           >
             {status}
           </span>
+          {fileUploaded && (
+            <div className="mt-2">
+              <Image
+                src={`http://127.0.0.1:5000/user_ticket/${createdBy?._id}/${fileUploaded}`}
+                alt="Ticket attachment"
+                width={100}
+                height={100}
+                className="rounded-md object-cover"
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className="flex justify-end">
@@ -353,7 +291,7 @@ function TicketItem({ ticket, onView }) {
   );
 }
 
-function TicketDetailsPopup({ ticket, onClose, onNavigateToRespond }) {
+function TicketDetailsPopup({ ticket, onClose }) {
   const {
     title,
     description,
@@ -362,13 +300,14 @@ function TicketDetailsPopup({ ticket, onClose, onNavigateToRespond }) {
     assignedTo,
     status,
     response,
+    fileUploaded,
   } = ticket;
   const createdDate = new Date(createdAt).toLocaleDateString();
   const router = useRouter();
   const handleRespond = () => {
     router.push(`/${ticket._id}`);
     onClose();
-  };
+  }
 
   return (
     <motion.div
@@ -426,6 +365,19 @@ function TicketDetailsPopup({ ticket, onClose, onNavigateToRespond }) {
             </span>
           </div>
 
+          {fileUploaded && (
+            <div className="mt-4">
+              <h3 className="font-semibold mb-2">Attachment</h3>
+              <Image
+                src={`http://127.0.0.1:5000/user_ticket/${createdBy?._id}/${fileUploaded}`}
+                alt="Ticket attachment"
+                width={300}
+                height={300}
+                className="rounded-md object-cover"
+              />
+            </div>
+          )}
+
           <div className="mt-4 p-4 rounded-lg">
             <h3 className="font-semibold mb-2">Response</h3>
             {response ? (
@@ -439,6 +391,17 @@ function TicketDetailsPopup({ ticket, onClose, onNavigateToRespond }) {
                   </p>
                 </div>
                 <p className="text-sm">{response.description}</p>
+                {response.fileUploaded && (
+                  <div className="mt-2">
+                    <Image
+                      src={`http://127.0.0.1:5000/user_ticket/${response.createdBy?._id}/${response.fileUploaded}`}
+                      alt="Response attachment"
+                      width={200}
+                      height={200}
+                      className="rounded-md object-cover"
+                    />
+                  </div>
+                )}
               </div>
             ) : (
               <p className="text-sm">No response yet.</p>
@@ -461,46 +424,15 @@ function TicketDetailsPopup({ ticket, onClose, onNavigateToRespond }) {
   );
 }
 
-function SidebarItem({
-  icon,
-  label,
-  href,
-  isExpanded,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  href?: string;
-  isExpanded: boolean;
-  onClick?: () => void;
-}) {
-  const content = (
-    <div
-      className="flex items-center mb-4 dark:text-neutral-200 hover:text-white cursor-pointer transition-colors duration-300"
-      onClick={onClick}
-    >
-      <div className="w-8">{icon}</div>
-      <span
-        className={`ml-2 ${
-          isExpanded ? "opacity-100" : "opacity-0 w-0"
-        } transition-all duration-300`}
-      >
-        {label}
-      </span>
-    </div>
-  );
-
-  if (href) {
-    return <Link href={href}>{content}</Link>;
-  }
-
-  return <div>{content}</div>;
-}
-
 export default function Page() {
   return (
     <ThemeProvider attribute="class">
-      <TicketManagement />
+      <div className="flex h-screen bg-Primary">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto">
+          <TicketManagement />
+        </main>
+      </div>
     </ThemeProvider>
   );
 }
