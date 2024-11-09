@@ -30,11 +30,6 @@ const PersonalInformationForm = () => {
   };
 
   useEffect(() => {
-    // Check if we're on the profile page
-    if (!pathname.includes('profile')) {
-      router.replace('/profile');
-      return;
-    }
 
     const fetchEmployeeData = async () => {
       if (typeof window === "undefined") return;
@@ -67,14 +62,6 @@ const PersonalInformationForm = () => {
           },
         });
 
-        if (!response.ok) {
-          if (response.status === 401) {
-            // Handle unauthorized access
-            router.push('/login');
-            return;
-          }
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
 
         const data = await response.json();
         const employee = data.data.employees.find(
