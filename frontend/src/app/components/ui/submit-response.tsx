@@ -39,25 +39,32 @@ const TicketResponsePage = () => {
   const params = useParams();
   const router = useRouter();
   const ticketId = params.ticketId;
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // If the path includes 'profile' or doesn't include 'tickets', redirect
+    if (pathname.includes('profile') || !pathname.includes('tickets')) {
+      router.replace('/profile'); // or wherever you want to redirect
+      return;
+    }
+  }, [pathname, router]);
 
   useEffect(() => {
     setIsClient(true);
-    // Only fetch ticket if we have a ticketId
-    if (ticketId && typeof ticketId === 'string') {
-      fetchTicket();
-    } else {
-      // If no ticketId, redirect to appropriate page or show error
-      setIsLoading(false);
-      setError("Invalid ticket ID");
-      // Optional: Redirect to tickets page or home
-      // router.push('/tickets');
+    
+    // Only proceed if we're on a ticket route
+    if (!pathname.includes('profile') && pathname.includes('tickets')) {
+      const ticketId = params.ticketId;
+      if (ticketId && typeof ticketId === 'string') {
+        fetchTicket(ticketId);
+      } else {
+        setIsLoading(false);
+        setError("Invalid ticket ID");
+      }
     }
-  }, [ticketId]);
+  }, [params]);
 
-  const fetchTicket = async () => {
-
-    if (!ticketId) return;
-
+  const fetchTicket = async (ticketId: string) => {
     try {
       const accessToken = document.cookie
         .split("; ")
@@ -67,7 +74,6 @@ const TicketResponsePage = () => {
       if (!accessToken) {
         throw new Error("No access token found");
       }
-
 
       const response = await fetch(`https://liwan-back.vercel.app/api/v1/tickets/${ticketId}`, {
         headers: {
@@ -81,12 +87,18 @@ const TicketResponsePage = () => {
 
       const data = await response.json();
       setTicket(data.data.ticket);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
   };
+
+  // If we're not on a ticket route, don't render anything
+  if (pathname.includes('profile') || !pathname.includes('tickets')) {
+    return null;
+  }
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
