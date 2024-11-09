@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sidebar } from '@/components/ui/sidebar';
+import { Sidebar } from '@/app/components/ui/sidebar';
 
 // Types for better type safety
 type Employee = {
