@@ -46,7 +46,7 @@ const TicketResponsePage = () => {
     if (pathname.includes("/profile")) { 
       setIsClient(true);
       console.log("CONDITION TRUE"); // Check if we're on the ticket page
-      return;
+      // return;
     } else {
       console.log("CONDITION FALSE");
       setIsClient(true);
