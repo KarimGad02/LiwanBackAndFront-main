@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { Moon, Sun, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from '@/components/ui/sidebar';
-import { Card, CardContent } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Skeleton } from '@/components/ui/skeleton';
 
 // Types for better type safety
 type Employee = {
@@ -21,8 +18,8 @@ const LoadingState = () => (
     <div className="grid gap-6 md:grid-cols-2">
       {[1, 2, 3, 4].map((i) => (
         <div key={i} className="space-y-2">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-10 w-full" />
+          <div className="h-4 w-24 bg-neutral-300 dark:bg-neutral-700 animate-pulse rounded" />
+          <div className="h-10 w-full bg-neutral-300 dark:bg-neutral-700 animate-pulse rounded" />
         </div>
       ))}
     </div>
@@ -30,22 +27,22 @@ const LoadingState = () => (
 );
 
 const ErrorState = ({ error, onRetry }: { error: string; onRetry: () => void }) => (
-  <Alert variant="destructive" className="my-4">
-    <AlertDescription>
-      {error}
+  <div className="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative my-4">
+    <div className="flex items-center justify-between">
+      <span>{error}</span>
       <button 
         onClick={onRetry}
         className="ml-4 px-4 py-2 bg-neutral-200 dark:bg-neutral-800 rounded hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors"
       >
         Retry
       </button>
-    </AlertDescription>
-  </Alert>
+    </div>
+  </div>
 );
 
 const PersonalInformationForm = ({ employee }: { employee: Employee }) => (
-  <Card>
-    <CardContent className="p-6">
+  <div className="bg-white dark:bg-neutral-900 rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-800">
+    <div className="p-6">
       <div className="grid gap-6 md:grid-cols-2">
         {[
           { label: 'Employee Name', value: employee.fullName, type: 'text' },
@@ -58,7 +55,7 @@ const PersonalInformationForm = ({ employee }: { employee: Employee }) => (
               {label}
             </label>
             <input
-              className="p-2 rounded-md bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700"
+              className="p-2 rounded-md bg-white dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100"
               type={type}
               value={value || ''}
               disabled
@@ -67,8 +64,8 @@ const PersonalInformationForm = ({ employee }: { employee: Employee }) => (
           </div>
         ))}
       </div>
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 );
 
 const PersonalInformationPage = () => {
@@ -132,15 +129,19 @@ const PersonalInformationPage = () => {
           ${isExpanded ? 'ml-[150px]' : 'ml-[30px]'}
         `}>
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold mb-8 text-neutral-800 dark:text-neutral-200">
-              Personal Information
-            </h1>
+            <div className="mb-8 flex items-center justify-between">
+              <h1 className="text-3xl font-bold text-neutral-800 dark:text-neutral-200">
+                Personal Information
+              </h1>
+            </div>
+            
             <AnimatePresence mode="wait">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
+                className="bg-white dark:bg-neutral-900 rounded-lg shadow-lg"
               >
                 {loading ? (
                   <LoadingState />
