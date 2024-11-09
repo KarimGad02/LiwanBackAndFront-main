@@ -42,12 +42,12 @@ export default function Login() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`${API_URL}/api/v1/employees/login`, {
+      const response = await fetch(`https://liwan-back.vercel.app/api/v1/employees/login`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": `https://liwan-back-and-front-main.vercel.app`, // Frontend URL
+          "Access-Control-Allow-Origin": `https://liwan-back.vercel.app`, // Frontend URL
           "Access-Control-Allow-Credentials": "true", // Allow credentials
         },
         body: JSON.stringify({
