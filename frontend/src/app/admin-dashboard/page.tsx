@@ -132,7 +132,7 @@ export function AdminDashboard() {
         const employeeId = payload?.id;
 
         if (employeeId) {
-          fetch(`${API_URL}/api/v1/employees/`, {
+          fetch(`https://liwan-back.vercel.app/api/v1/employees/`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -235,7 +235,7 @@ export function AdminDashboard() {
           .find((row) => row.startsWith("accessToken"))
           ?.split("=")[1];
         const response = await fetch(
-          `${API_URL}/api/v1/employees/UpdateManagerDep`,
+          `https://liwan-back.vercel.app/api/v1/employees/UpdateManagerDep`,
           {
             method: "PATCH",
             headers: {
@@ -333,7 +333,7 @@ export function AdminDashboard() {
         ?.split("=")[1];
 
       if (accessToken) {
-        fetch(`${API_URL}api/v1/employees/`, {
+        fetch(`https://liwan-back.vercel.app/api/v1/employees/`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -381,7 +381,7 @@ export function AdminDashboard() {
           .find((row) => row.startsWith("accessToken"))
           ?.split("=")[1];
         const response = await fetch(
-          `${API_URL}api/v1/employees/UpdateManagerDep`,
+          `https://liwan-back.vercel.app/api/v1/employees/UpdateManagerDep`,
           {
             method: "PATCH",
             headers: {
