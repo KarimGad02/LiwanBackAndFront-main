@@ -41,17 +41,9 @@ const TicketResponsePage = () => {
   const ticketId = params.ticketId;
   const pathname = usePathname();
 
-  useEffect(() => {
-    // If the path includes 'profile' or doesn't include 'tickets', redirect
-    if (pathname.includes('profile') || !pathname.includes('tickets')) {
-      router.replace('/profile'); // or wherever you want to redirect
-      return;
-    }
-  }, [pathname, router]);
 
   useEffect(() => {
     setIsClient(true);
-    
     // Only proceed if we're on a ticket route
     if (!pathname.includes('profile') && pathname.includes('tickets')) {
       const ticketId = params.ticketId;
