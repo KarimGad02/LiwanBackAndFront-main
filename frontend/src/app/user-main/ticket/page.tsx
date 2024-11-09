@@ -12,6 +12,7 @@ import { ThemeProvider, useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useSSE } from '../../../hooks/useSSE';
 import { Sidebar } from "@/app/components/ui/sidebar";
+import Image from "next/image";
 
 export function TicketManagement() {
   const [isExpanded, setIsExpanded] = useState(false);

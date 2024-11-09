@@ -1,13 +1,8 @@
-"use client"; // Only needed if you're using client-side hooks or features
+"use client";
+
 import { Sidebar } from "@/app/components/ui/sidebar";
-import { API_URL } from "../../../config"; // Adjust your import as necessary
 import { useState, useEffect } from "react";
-import {
-  Moon,
-  Sun,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeProvider, useTheme } from "next-themes";
 
@@ -17,6 +12,8 @@ const PersonalInformationForm = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [extension, setExtension] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const decodeTokenPayload = (token) => {
     try {
@@ -28,39 +25,44 @@ const PersonalInformationForm = () => {
       return null;
     }
   };
-  if (typeof window !== "undefined") {
+
   useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+    const fetchEmployeeData = async () => {
+      if (typeof window === "undefined") return;
+      try {
+        setLoading(true);
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("accessToken="))
+          ?.split("=")[1];
 
-    if (!token) return;
-
-    const payload = decodeTokenPayload(token);
-    const employeeId = payload?.id;
-
-    if (!employeeId) return;
-
-    fetchEmployeeData(token, employeeId);
-  }, []);
-  }
-  const fetchEmployeeData = (token, employeeId) => {
-    fetch("https://liwan-back.vercel.app/api/v1/employees/", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+        if (!token) {
+          setError("No authentication token found");
+          return;
         }
-        return response.json();
-      })
-      .then((data) => {
+
+        const payload = decodeTokenPayload(token);
+        const employeeId = payload?.id;
+
+        if (!employeeId) {
+          setError("No employee ID found in token");
+          return;
+        }
+
+        const response = await fetch("https://liwan-back.vercel.app/api/v1/employees/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
         const employee = data.data.employees.find(
           (emp) => emp._id === employeeId
         );
@@ -71,11 +73,26 @@ const PersonalInformationForm = () => {
           setEmail(employee.email);
           setExtension(employee.extensionsnumber || "");
         } else {
-          console.error("Employee not found");
+          setError("Employee not found");
         }
-      })
-      .catch((error) => console.error("Error fetching employee:", error));
-  };
+      } catch (error) {
+        console.error("Error fetching employee:", error);
+        setError("Failed to fetch employee data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEmployeeData();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-4">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500 text-center py-4">{error}</div>;
+  }
 
   return (
     <form className="space-y-6">
@@ -135,9 +152,9 @@ export default function PersonalInformationPage() {
     setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <ThemeProvider attribute="class">
@@ -164,7 +181,6 @@ export default function PersonalInformationPage() {
             </div>
           </main>
 
-          {/* Expand/Collapse button */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="fixed bottom-4 left-4 p-2 rounded-full bg-Primary text-neutral-200 hover:bg-primary-foreground hover:text-Primary transition-colors duration-300"
