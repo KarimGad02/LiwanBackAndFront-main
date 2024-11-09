@@ -1,20 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Sidebar } from "@/app/components/ui/sidebar";
+import { useState, useEffect } from "react";
 import { Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeProvider, useTheme } from "next-themes";
 
+// Separate the personal information form into its own component
 const PersonalInformationForm = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [extension, setExtension] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const decodeTokenPayload = (token: string) => {
+  const decodeTokenPayload = (token) => {
     try {
       const base64Payload = token.split(".")[1];
       const decodedPayload = atob(base64Payload);
@@ -28,8 +29,6 @@ const PersonalInformationForm = () => {
   useEffect(() => {
     const fetchEmployeeData = async () => {
       try {
-        if (typeof window === 'undefined') return;
-        
         setLoading(true);
         const token = document.cookie
           .split("; ")
@@ -49,36 +48,35 @@ const PersonalInformationForm = () => {
           return;
         }
 
-        const response = await fetch(
-          `https://liwan-back.vercel.app/api/v1/employees/${employeeId}`, // Changed to fetch specific employee
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Cache-Control": "no-cache",
-            },
-            cache: 'no-store'
-          }
-        );
+        const response = await fetch("https://liwan-back.vercel.app/api/v1/employees/", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        const employee = data.data.employee; // Updated to match response structure
+        const employee = data.data.employees.find(
+          (emp) => emp._id === employeeId
+        );
 
         if (employee) {
-          setName(employee.fullName || '');
-          setPhone(employee.phone || '');
-          setEmail(employee.email || '');
-          setExtension(employee.extensionsnumber || '');
+          setName(employee.fullName);
+          setPhone(employee.phone || "");
+          setEmail(employee.email);
+          setExtension(employee.extensionsnumber || "");
         } else {
           setError("Employee not found");
         }
-      } catch (error: any) {
+      } catch (error) {
         console.error("Error fetching employee:", error);
-        setError(error.message || "Failed to fetch employee data");
+        setError("Failed to fetch employee data");
       } finally {
         setLoading(false);
       }

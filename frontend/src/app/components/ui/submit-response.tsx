@@ -33,85 +33,79 @@ const TicketResponsePage = () => {
   const [isClient, setIsClient] = useState(false);
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [responseDescription, setResponseDescription] = useState("");
-  const [fileUploaded, setFileUploaded] = useState<File | null>(null);
+  const [fileUploaded, setFileUplaoded] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const params = useParams();
   const router = useRouter();
-  const ticketId = params.ticketId as string;
+  const ticketId = params.ticketId;
 
   useEffect(() => {
     setIsClient(true);
-    if (ticketId) {
-      fetchTicket();
-    }
-  }, [ticketId]);
+    // fetchTicket();
+  }, []);
 
-  const getAccessToken = () => {
-    if (typeof document !== 'undefined') {
-      return document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("accessToken"))
-        ?.split("=")[1];
-    }
-    return null;
-  };
+  // const fetchTicket = async () => {
+  //   try {
+  //     const accessToken = document.cookie
+  //       .split("; ")
+  //       .find((row) => row.startsWith("accessToken"))
+  //       ?.split("=")[1];
 
-  const fetchTicket = async () => {
-    try {
-      const accessToken = getAccessToken();
+  //     if (!accessToken) {
+  //       throw new Error("No access token found");
+  //     }
 
-      if (!accessToken) {
-        throw new Error("No access token found");
-      }
+  //     const response = await fetch(`https://liwan-back.vercel.app/api/v1/tickets/${ticketId}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     });
 
-      const response = await fetch(`https://liwan-back.vercel.app/api/v1/tickets/${ticketId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        cache: 'no-store'
-      });
+  //     if (!response.ok) {
+  //       throw new Error("Failed to fetch ticket");
+  //     }
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch ticket");
-      }
-
-      const data = await response.json();
-      setTicket(data.data.ticket);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     const data = await response.json();
+  //     setTicket(data.data.ticket);
+  //   } catch (err) {
+  //     setError(err.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setFileUploaded(event.target.files[0]);
+      setFileUplaoded(event.target.files[0]);
     }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const accessToken = getAccessToken();
+      const accessToken = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("accessToken"))
+        ?.split("=")[1];
   
       if (!accessToken) {
         throw new Error("No access token found");
       }
   
-      const formData = new FormData();
-      formData.append('responseDescription', responseDescription);
-      if (fileUploaded) {
-        formData.append('fileUploaded', fileUploaded);
-      }
+      // Create JSON payload
+      const payload = {
+        responseDescription,
+        fileUploaded,
+      };
   
       const submitResponse = await fetch(`https://liwan-back.vercel.app/api/v1/tickets/${ticketId}`, {
         method: "PATCH",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: formData,
+        body: JSON.stringify(payload),
       });
   
       if (!submitResponse.ok) {
@@ -120,7 +114,7 @@ const TicketResponsePage = () => {
       }
   
       router.push("/ticket-history");
-    } catch (err: any) {
+    } catch (err) {
       setError(err.message);
     }
   };
