@@ -161,29 +161,29 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   console.log(isManager);
 
   
-  // return (
-  //   <motion.div
-  //     className={`flex flex-col bg-Primary dark:bg-neutral-950 h-full transition-all duration-300 ease-in-out ${
-  //       open ? "w-[200px]" : "w-[40px]"
-  //     } ${className}`}
-  //     onMouseEnter={() => setOpen(true)}
-  //     onMouseLeave={() => setOpen(false)}
-  //   >
-  //     <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden pt-6">
-  //       {open ? <Logo /> : <LogoIcon />}
-  //       <div className="mt-8 flex flex-col gap-2">
-  //         {links
-  //           .filter((link) => link.show)
-  //           .map((link, idx) => (
-  //             <SidebarLink key={idx} link={link} />
-  //           ))}
-  //       </div>
-  //       <div className="mt-auto pb-4 flex justify-center">
-  //         <ThemeToggle />
-  //       </div>
-  //     </div>
-  //   </motion.div>
-  // );
+  return (
+    <motion.div
+      className={`flex flex-col bg-Primary dark:bg-neutral-950 h-full transition-all duration-300 ease-in-out ${
+        open ? "w-[200px]" : "w-[40px]"
+      } ${className}`}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden pt-6">
+        {/* {open ? <Logo /> : <LogoIcon />} */}
+        <div className="mt-8 flex flex-col gap-2">
+          {links
+            .filter((link) => link.show)
+            .map((link, idx) => (
+              <SidebarLink key={idx} link={link} />
+            ))}
+        </div>
+        <div className="mt-auto pb-4 flex justify-center">
+          <ThemeToggle />
+        </div>
+      </div>
+    </motion.div>
+  );
 };
 
 // const Logo: React.FC = () => {
