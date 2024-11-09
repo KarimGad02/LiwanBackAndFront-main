@@ -3,7 +3,7 @@ const Department = require("../models/departmentModel");
 const Employee = require("../models/employeeModel");
 const AppError = require("../utils/AppError");
 const Ticket = require("../models/ticketModel");
-
+//none
 /**
  * @function getAllDepartments
  * @description Retrieves all departments from the database.
