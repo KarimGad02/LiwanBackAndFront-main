@@ -174,7 +174,7 @@ export function TicketManagement() {
   if (!isAdmin) {
     return (
       <div className="flex h-screen justify-center items-center text-center text-xl">
-        <p>Access denied. Admins only.</p>
+        <p>Loading...</p>
       </div>
     );
   }
