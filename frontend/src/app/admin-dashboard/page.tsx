@@ -488,13 +488,13 @@ export function AdminDashboard() {
           isExpanded ? "ml-[300px]" : "ml-[72px]"
         }`}
       >
-        <h1 className="text-2xl md:text-3xl font-bold mb-4 px-8 py-4">
+        <h1 className="text-3xl md:text-4xl font-bold mb-4 px-8 py-4">
           Dashboard
         </h1>
 
         {/* Managers Section */}
         <div>
-          <h2 className="text-xl font-semibold mb-4 px-8">Add Managers:</h2>
+          <h2 className="text-3xl font-semibold mb-4 px-8">Add Managers:</h2>
           <div className="grid md:grid-cols-3 grid-cols-1 gap-4 px-8 pt-4">
             {managers.map((manager) => (
               <div
@@ -540,7 +540,8 @@ export function AdminDashboard() {
           </div>
         </div>
         {/* Departments Section */}
-        <h2 className="text-xl font-semibold px-8 py-8">Add Departments:</h2>
+        <div className="pt-16"></div>
+        <h2 className="text-3xl font-semibold px-8 py-8">Add Departments:</h2>
         <div className="grid md:grid-cols-3 grid-cols-1 gap-4 px-8 pt-4">
           {departments.map((department) => (
             <div
