@@ -163,7 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
 
   return (
     <motion.div
-      className={`flex flex-col bg-white dark:bg-neutral-950 h-full transition-all duration-300 ease-in-out ${open ? "w-[200px]" : "w-[40px]"
+      className={`flex flex-col bg-Primary dark:bg-neutral-950 h-full transition-all duration-300 ease-in-out ${open ? "w-[200px]" : "w-[40px]"
         } ${className}`}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
