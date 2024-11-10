@@ -604,7 +604,7 @@ export function AdminDashboard() {
 
 export default function Page() {
   return (
-    <>
+    <div classname="h-full">
       <ThemeProvider attribute="class">
         <div className="flex h-screen bg-Primary">
           <Sidebar />
@@ -613,6 +613,6 @@ export default function Page() {
           </main>
         </div>
       </ThemeProvider>
-    </>
+    </div>
   );
 }
