@@ -610,6 +610,7 @@ export default function Page() {
         <main className="flex-1 overflow-y-auto">
           <AdminDashboard />
         </main>
+        <footer className="dark:bg-neutral-300 bg-Primary"></footer>
       </div>
     </ThemeProvider>
   );
