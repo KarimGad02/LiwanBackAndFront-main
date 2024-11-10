@@ -15,6 +15,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation"; // Add this import
+import { Sidebar } from "../components/ui/sidebar";
 
 function Modal({
   isOpen,
@@ -700,7 +701,12 @@ function SidebarItem({
 export default function Page() {
   return (
     <ThemeProvider attribute="class">
-      <AdminDashboard />
+    <div className="flex h-screen bg-Primary">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto">
+          <AdminDashboard />
+        </main>
+      </div>
     </ThemeProvider>
   );
 }
