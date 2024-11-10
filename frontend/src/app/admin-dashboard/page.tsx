@@ -415,10 +415,10 @@ export function AdminDashboard() {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-screen">
       {/* Main content */}
       <main
-        className={`flex-1 p-4 transition-all duration-300 dark:bg-Primary dark:text-neutral-200 bg-neutral-200 text-Primary ${isExpanded ? "ml-[300px]" : "ml-[72px] h-full"
+        className={`flex-1 p-4 transition-all duration-300 dark:bg-Primary dark:text-neutral-200 bg-neutral-200 text-Primary ${isExpanded ? "ml-[300px]" : "ml-[72px] h-screen"
           }`}
       >
         <h1 className="text-3xl md:text-4xl font-bold mb-4 px-8 py-4">
