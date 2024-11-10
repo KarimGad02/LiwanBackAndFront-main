@@ -94,8 +94,9 @@ export function AuroraBackgroundDemo() {
                   : "/liwan-logo-inverted.png"
               }
               alt="logo"
-              width={theme === "dark" ? 400 : 340} // Set specific width for each theme
-              height={theme === "dark" ? 400 : 340} // Set specific height for each theme
+              width={380} // Unified width for both themes
+              height={430} // Unified height for both themes
+              className="mx-auto" // Center-align the image
             />
           </div>
         </div>
@@ -110,7 +111,7 @@ export function AuroraBackgroundDemo() {
 
         <div className="flex space-x-4">
           {isSignedIn ? (
-            <>
+            
               <button
                 className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border px-6 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 
               border-blue-300 bg-[linear-gradient(110deg,#e0f2fe,45%,#bae6fd,55%,#e0f2fe)] bg-[length:200%_100%] text-blue-800 focus:ring-blue-600 focus:ring-offset-blue-200
@@ -118,7 +119,7 @@ export function AuroraBackgroundDemo() {
               >
                 <Link href="/user-main">Raise a Ticket</Link>
               </button>
-            </>
+    
           ) : (
             <button
               className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border px-6 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 
