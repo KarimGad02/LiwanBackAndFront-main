@@ -135,6 +135,8 @@ const TicketForm = () => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
+          'Access-Control-Allow-Origin': 'https://liwan-back-and-front-main-beta.vercel.app/',  // Frontend URL
+          'Access-Control-Allow-Credentials': 'true',              // Allow credentials
         },
         body: formData,
       });
