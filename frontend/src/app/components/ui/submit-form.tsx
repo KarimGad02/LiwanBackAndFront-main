@@ -133,10 +133,9 @@ const TicketForm = () => {
     try {
       const response = await fetch("https://liwan-back.vercel.app/api/v1/tickets/", {
         method: "POST",
+        credentials: 'include',
         headers: {
-          Authorization: `Bearer ${token}`,
-          'Access-Control-Allow-Origin': 'https://liwan-back-and-front-main-beta.vercel.app',  // Frontend URL
-          'Access-Control-Allow-Credentials': 'true',              // Allow credentials
+          Authorization: `Bearer ${token}`,         // Allow credentials
         },
         body: formData,
       });
