@@ -484,7 +484,7 @@ export function AdminDashboard() {
 
       {/* Main content */}
       <main
-        className={`flex-1 p-4 transition-all duration-300 dark:bg-Primary dark:text-neutral-200 bg-neutral-200 text-Primary h-fit ${
+        className={`flex-1 p-4 transition-all duration-300 dark:bg-Primary dark:text-neutral-200 bg-neutral-200 text-Primary h-screen ${
           isExpanded ? "ml-[300px]" : "ml-[72px]"
         }`}
       >
