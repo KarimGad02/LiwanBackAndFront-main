@@ -498,7 +498,7 @@ export function AdminDashboard() {
             {managers.map((manager) => (
               <div
                 key={manager._id}
-                className="border-2 dark:border-Primary border-neutral-200 shadow-lg rounded-lg duration-300 hover:shadow-xl p-4"
+                className="p-4 rounded-lg bg-Primary shadow-lg hover:shadow-2xl shadow-black/50 hover:shadow-black text-neutral-200 duration-300"
               >
                 <div className="md:max-w-none max-w-full">
                   <h3 className="font-semibold text-xl truncate">
@@ -523,7 +523,7 @@ export function AdminDashboard() {
             ))}
 
             {/* Add Manager Card */}
-            <div className="border-2 dark:border-Primary border-neutral-200 shadow-lg rounded-lg hover:shadow-xl duration-300 p-4">
+            <div className="p-4 rounded-lg bg-Primary shadow-lg hover:shadow-2xl shadow-black/50 hover:shadow-black text-neutral-200 duration-300">
               <div className="flex justify-center items-center p-14">
                 <button
                   className="flex justify-center items-center"
@@ -544,7 +544,7 @@ export function AdminDashboard() {
           {departments.map((department) => (
             <div
               key={department._id}
-              className="border-2 dark:border-Primary border-neutral-200 shadow-lg rounded-lg hover:shadow-xl duration-300 p-4"
+              className="p-4 rounded-lg bg-Primary shadow-lg hover:shadow-2xl shadow-black/50 hover:shadow-black text-neutral-200 duration-300"
             >
               <h3 className="font-semibold text-xl">{department.name}</h3>
               <div className="flex justify-center items-center p-4">
@@ -564,7 +564,7 @@ export function AdminDashboard() {
           ))}
 
           {/* Add Department Card */}
-          <div className="border-2 dark:border-Primary border-neutral-200 shadow-lg rounded-lg hover:shadow-xl duration-300 p-4">
+          <div className="p-4 rounded-lg bg-Primary shadow-lg hover:shadow-2xl shadow-black/50 hover:shadow-black text-neutral-200 duration-300">
             <button
               onClick={() => openModal("department")}
               className="flex justify-center items-center"
