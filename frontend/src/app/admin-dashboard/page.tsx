@@ -604,13 +604,15 @@ export function AdminDashboard() {
 
 export default function Page() {
   return (
-    <ThemeProvider attribute="class">
-      <div className="flex h-full bg-Primary">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto h-full">
-          <AdminDashboard />
-        </main>
-      </div>
-    </ThemeProvider>
+    <>
+      <ThemeProvider attribute="class">
+        <div className="flex h-screen bg-Primary">
+          <Sidebar />
+          <main className="flex-1 overflow-y-auto h-screen">
+            <AdminDashboard />
+          </main>
+        </div>
+      </ThemeProvider>
+    </>
   );
 }
