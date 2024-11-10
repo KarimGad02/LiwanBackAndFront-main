@@ -15,7 +15,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation"; // Add this import
-import { Sidebar } from "../components/ui/sidebar";
+import { Sidebar } from "@/app/components/ui/sidebar";
 
 function Modal({
   isOpen,
@@ -167,12 +167,11 @@ export function AdminDashboard() {
       if (isAdmin) {
         fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
           headers: {
-            Authorization: `Bearer ${
-              document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("accessToken"))
-                ?.split("=")[1]
-            }`,
+            Authorization: `Bearer ${document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("accessToken"))
+              ?.split("=")[1]
+              }`,
           },
         })
           .then((response) => response.json())
@@ -195,12 +194,11 @@ export function AdminDashboard() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${
-              document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("accessToken"))
-                ?.split("=")[1]
-            }`,
+            Authorization: `Bearer ${document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("accessToken"))
+              ?.split("=")[1]
+              }`,
           },
           body: JSON.stringify({ name: newDepartment }), // Use newDepartment state
         });
@@ -277,12 +275,11 @@ export function AdminDashboard() {
           {
             method: "DELETE",
             headers: {
-              Authorization: `Bearer ${
-                document.cookie
-                  .split("; ")
-                  .find((row) => row.startsWith("accessToken"))
-                  ?.split("=")[1]
-              }`, // Add authorization if required
+              Authorization: `Bearer ${document.cookie
+                .split("; ")
+                .find((row) => row.startsWith("accessToken"))
+                ?.split("=")[1]
+                }`, // Add authorization if required
             },
           }
         );
@@ -308,12 +305,11 @@ export function AdminDashboard() {
       try {
         const response = await fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
           headers: {
-            Authorization: `Bearer ${
-              document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("accessToken"))
-                ?.split("=")[1]
-            }`,
+            Authorization: `Bearer ${document.cookie
+              .split("; ")
+              .find((row) => row.startsWith("accessToken"))
+              ?.split("=")[1]
+              }`,
           },
         });
         const data = await response.json();
@@ -420,73 +416,10 @@ export function AdminDashboard() {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-full dark:bg-neutral-950 text-neutral-200 bg-Primary p-4 transition-all duration-300 ease-in-out z-10 flex flex-col ${
-          isExpanded ? "w-[300px]" : "w-[72px]"
-        }`}
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
-      >
-        <div className="flex items-center mb-8">
-          <Link href={"/profile"} className="flex items-center">
-            <img
-              src="/Sidebar-Icon.jpg"
-              alt="Admin"
-              className="w-10 h-10 rounded-full mr-3"
-            />
-            {isExpanded && <span className="text-xl font-semibold">Admin</span>}
-          </Link>
-        </div>
-        <nav className="flex-grow">
-          <SidebarItem
-            icon={<Home size={20} />}
-            label="Home"
-            href="/user-main"
-            isExpanded={isExpanded}
-          />
-          <SidebarItem
-            icon={<History size={20} />}
-            label="History"
-            href="/ticket-history"
-            isExpanded={isExpanded}
-          />
-
-          <SidebarItem
-            icon={<LogOut size={20} />}
-            label="Log out"
-            href="/"
-            isExpanded={isExpanded}
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                document.cookie =
-                  "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; secure; samesite=strict";
-                // Redirect to the login page
-                router.push("/");
-              }
-            }}
-          />
-        </nav>
-        <button
-          onClick={toggleTheme}
-          className={`mt-auto w-full py-2 flex items-center hover:bg-gray-700 text-white hover:bg-opacity-80 transition-colors duration-300 rounded ${
-            isExpanded ? "text-left" : "text-center"
-          }`}
-        >
-          {themeIcon}
-          {isExpanded && (
-            <span className="ml-2">
-              {theme === "dark" ? "Light Mode" : "Dark Mode"}
-            </span>
-          )}
-        </button>
-      </aside>
-
       {/* Main content */}
       <main
-        className={`flex-1 p-4 transition-all duration-300 dark:bg-Primary dark:text-neutral-200 bg-neutral-200 text-Primary h-screen ${
-          isExpanded ? "ml-[300px]" : "ml-[72px]"
-        }`}
+        className={`flex-1 p-4 transition-all duration-300 dark:bg-Primary dark:text-neutral-200 bg-neutral-200 text-Primary ${isExpanded ? "ml-[300px]" : "ml-[72px]"
+          }`}
       >
         <h1 className="text-3xl md:text-4xl font-bold mb-4 px-8 py-4">
           Dashboard
@@ -668,41 +601,11 @@ export function AdminDashboard() {
   );
 }
 
-function SidebarItem({
-  icon,
-  label,
-  href,
-  isExpanded,
-  onClick,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  href: string;
-  isExpanded: boolean;
-  onClick?: () => void;
-}) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center mb-1 hover:text-white cursor-pointer transition-colors duration-300 px-4 py-1"
-      onClick={onClick}
-    >
-      <div className="w-8">{icon}</div>
-      <span
-        className={`ml-2 ${
-          isExpanded ? "opacity-100" : "opacity-0 w-0"
-        } transition-all duration-300`}
-      >
-        {label}
-      </span>
-    </Link>
-  );
-}
 
 export default function Page() {
   return (
     <ThemeProvider attribute="class">
-    <div className="flex h-screen bg-Primary">
+      <div className="flex h-screen bg-Primary">
         <Sidebar />
         <main className="flex-1 overflow-y-auto">
           <AdminDashboard />

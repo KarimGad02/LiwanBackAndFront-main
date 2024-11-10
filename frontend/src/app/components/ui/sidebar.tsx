@@ -63,13 +63,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       label: "Assigned to me",
       href: "/tickets-assigned",
       icon: <Ticket className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
-      show: isManager && isAdmin ,
+      show: isAdmin || isManager,
     },
     {
       label: "Submit a ticket",
       href: "/user-ticket",
       icon: <Plus className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
-      show: open,
+      show: !isManager || !isAdmin,
     },
     {
       label: "History",
@@ -160,12 +160,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   console.log(isAdmin);
   console.log(isManager);
 
-  
+
   return (
     <motion.div
-      className={`flex flex-col bg-Primary dark:bg-neutral-950 h-full transition-all duration-300 ease-in-out ${
-        open ? "w-[200px]" : "w-[40px]"
-      } ${className}`}
+      className={`flex flex-col bg-Primary dark:bg-neutral-950 h-full transition-all duration-300 ease-in-out ${open ? "w-[200px]" : "w-[40px]"
+        } ${className}`}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
