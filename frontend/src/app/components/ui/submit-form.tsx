@@ -116,12 +116,13 @@ const TicketForm = () => {
       .split("; ")
       .find((row) => row.startsWith("accessToken="))
       ?.split("=")[1];
-
+  
     if (!token) {
       console.error("No access token found for submission.");
+      alert("You are not logged in. Please log in and try again.");
       return;
     }
-
+  
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
@@ -129,17 +130,29 @@ const TicketForm = () => {
     if (file) {
       formData.append('fileUploaded', file);
     }
-    //conflict
+  
     try {
       const response = await fetch("https://liwan-back.vercel.app/api/v1/tickets/", {
         method: "POST",
         credentials: 'include',
         headers: {
-          Authorization: `Bearer ${token}`,         // Allow credentials
+          'Authorization': `Bearer ${token}`
         },
         body: formData,
       });
-
+  
+      // First try to get the response as text
+      const responseText = await response.text();
+      let errorData;
+      
+      try {
+        // Try to parse it as JSON
+        errorData = JSON.parse(responseText);
+      } catch (e) {
+        // If it's not JSON, use the text directly
+        errorData = { message: responseText };
+      }
+  
       if (response.ok) {
         setTitle("");
         setDescription("");
@@ -149,11 +162,14 @@ const TicketForm = () => {
         console.log("Ticket submitted successfully.");
         router.push('/user-main/ticket'); 
       } else {
-        const errorData = await response.json();
         console.error("Failed to submit ticket:", errorData);
+        // Show error message to user
+        const errorMessage = errorData.message || 'Failed to submit ticket. Please try again.';
+        alert(errorMessage);
       }
     } catch (error) {
       console.error("Error occurred during ticket submission:", error);
+      alert('Network error occurred. Please check your connection and try again.');
     }
   };
 
