@@ -129,7 +129,7 @@ const TicketForm = () => {
     if (file) {
       formData.append('fileUploaded', file);
     }
-
+    //conflict
     try {
       const response = await fetch("https://liwan-back.vercel.app/api/v1/tickets/", {
         method: "POST",
