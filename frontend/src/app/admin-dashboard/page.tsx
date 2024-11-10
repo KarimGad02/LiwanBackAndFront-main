@@ -609,8 +609,8 @@ export default function Page() {
         <Sidebar />
         <main className="flex-1 overflow-y-auto">
           <AdminDashboard />
+          <footer className="dark:bg-neutral-300 bg-Primary"></footer>
         </main>
-        <footer className="dark:bg-neutral-300 bg-Primary"></footer>
       </div>
     </ThemeProvider>
   );
