@@ -415,7 +415,7 @@ export function AdminDashboard() {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full">
       {/* Main content */}
       <main
         className={`flex-1 p-4 transition-all duration-300 dark:bg-Primary dark:text-neutral-200 bg-neutral-200 text-Primary ${isExpanded ? "ml-[300px]" : "ml-[72px] h-screen"
@@ -604,15 +604,13 @@ export function AdminDashboard() {
 
 export default function Page() {
   return (
-    <div classname="h-full">
-      <ThemeProvider attribute="class">
-        <div className="flex h-screen bg-Primary">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto h-screen">
-            <AdminDashboard />
-          </main>
-        </div>
-      </ThemeProvider>
-    </div>
+    <ThemeProvider attribute="class">
+      <div className="flex h-screen bg-Primary">
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto h-screen">
+          <AdminDashboard />
+        </main>
+      </div>
+    </ThemeProvider>
   );
 }
