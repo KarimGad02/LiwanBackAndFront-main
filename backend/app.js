@@ -22,9 +22,7 @@ app.enable("trust-proxy");
 const corsOptions = {
   origin: ['https://liwan-back-and-front-main-beta.vercel.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-  maxAge: 600 // Caches preflight request for 10 minutes
 };
 app.use(cors(corsOptions));
 app.use(helmet());
