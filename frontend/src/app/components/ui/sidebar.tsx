@@ -49,7 +49,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       icon: (
         <IconBrandTabler className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />
       ),
-      show: !isAdmin && !isManager,
+      show: true
     },
     {
       label: "Admin Dashboard",
