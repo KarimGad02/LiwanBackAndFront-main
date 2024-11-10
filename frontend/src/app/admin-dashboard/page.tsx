@@ -607,9 +607,8 @@ export default function Page() {
     <ThemeProvider attribute="class">
       <div className="flex h-screen bg-Primary">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto h-screen">
           <AdminDashboard />
-          <footer className="dark:bg-neutral-300 bg-Primary"></footer>
         </main>
       </div>
     </ThemeProvider>
