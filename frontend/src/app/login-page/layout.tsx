@@ -31,7 +31,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={theme}>
-      <body className={`${inter.className} bg-background text-foreground`}>
+      <body className={`${inter.className} bg-background text-foreground dark:bg-black dark:text-white`}>
         <div className="min-h-screen">
           <header className="container mx-auto px-4 py-4 flex justify-between items-center">
             <h1 className="text-2xl font-bold text-amber-800">Liwan</h1>

@@ -60,16 +60,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       show: isAdmin,
     },
     {
-      label: "Assigned to",
+      label: "Assigned to me",
       href: "/tickets-assigned",
       icon: <Ticket className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
-      show: isAdmin || isManager,
+      show: isManager && isAdmin ,
     },
     {
       label: "Submit a ticket",
       href: "/user-ticket",
       icon: <Plus className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
-      show: !isManager || !isAdmin,
+      show: open,
     },
     {
       label: "History",
@@ -77,7 +77,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       icon: (
         <HistoryIcon className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />
       ),
-      show: isManager,
+      show: isAdmin,
     },
     {
       label: "Logout",
