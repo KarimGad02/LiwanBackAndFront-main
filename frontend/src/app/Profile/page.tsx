@@ -1,80 +1,66 @@
-"use client";
-import { Sidebar } from "@/app/components/ui/sidebar";
-import { useState, useEffect } from "react";
-import {
-  Moon,
-  Sun,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ThemeProvider, useTheme } from "next-themes";
+'use client'
 
-// Separate the personal information form into its own component
+import { useState, useEffect } from "react"
+import { Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { ThemeProvider, useTheme } from "next-themes"
+import { Sidebar } from "../components/ui/sidebar"
+
 const PersonalInformationForm = () => {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [extension, setExtension] = useState("");
+  const [employee, setEmployee] = useState({
+    fullName: "",
+    email: "",
+    extensionsnumber: "",
+  })
 
-  const decodeTokenPayload = (token) => {
+  const decodeTokenPayload = (token: string) => {
     try {
-      const base64Payload = token.split(".")[1];
-      const decodedPayload = atob(base64Payload);
-      return JSON.parse(decodedPayload);
+      const base64Payload = token.split(".")[1]
+      const decodedPayload = atob(base64Payload)
+      return JSON.parse(decodedPayload)
     } catch (error) {
-      console.error("Failed to decode token payload:", error);
-      return null;
+      console.error("Failed to decode token payload:", error)
+      return null
     }
-  };
+  }
 
   useEffect(() => {
     const token = document.cookie
       .split("; ")
       .find((row) => row.startsWith("accessToken="))
-      ?.split("=")[1];
+      ?.split("=")[1]
 
-    if (!token) return;
+    if (!token) return
 
-    const payload = decodeTokenPayload(token);
-    const employeeId = payload?.id;
+    const payload = decodeTokenPayload(token)
+    const employeeId = payload?.id
 
-    if (!employeeId) return;
+    if (!employeeId) return
 
-    fetchEmployeeData(token, employeeId);
-  }, []);
+    fetchEmployeeData(token, employeeId)
+  }, [])
 
-  const fetchEmployeeData = (token, employeeId) => {
-    fetch("http://127.0.0.1:5000/api/v1/employees/", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
+  const fetchEmployeeData = async (token: string, employeeId: string) => {
+    try {
+      const response = await fetch(`https://liwan-back.vercel.app/api/v1/employees/${employeeId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache",
+        },
       })
-      .then((data) => {
-        const employee = data.data.employees.find(
-          (emp) => emp._id === employeeId
-        );
 
-        if (employee) {
-          setName(employee.fullName);
-          setPhone(employee.phone || "");
-          setEmail(employee.email);
-          setExtension(employee.extensionsnumber || "");
-        } else {
-          console.error("Employee not found");
-        }
-      })
-      .catch((error) => console.error("Error fetching employee:", error));
-  };
+      if (!response.ok) {
+        throw new Error("Network response was not ok")
+      }
+
+      const data = await response.json()
+      setEmployee(data.data.employee)
+    } catch (error) {
+      console.error("Error fetching employee:", error)
+    }
+  }
 
   return (
     <form className="space-y-6">
@@ -85,17 +71,7 @@ const PersonalInformationForm = () => {
             className="p-2 rounded-md bg-white dark:bg-neutral-800"
             id="name"
             type="text"
-            value={name}
-            disabled
-          />
-        </div>
-        <div className="form-control flex flex-col">
-          <label className="mb-2 font-medium">Employee Phone</label>
-          <input
-            className="p-2 rounded-md bg-white dark:bg-neutral-800"
-            id="phone"
-            type="tel"
-            value={phone}
+            value={employee.fullName}
             disabled
           />
         </div>
@@ -105,7 +81,7 @@ const PersonalInformationForm = () => {
             className="p-2 rounded-md bg-white dark:bg-neutral-800"
             id="email"
             type="email"
-            value={email}
+            value={employee.email}
             disabled
           />
         </div>
@@ -115,28 +91,27 @@ const PersonalInformationForm = () => {
             className="p-2 rounded-md bg-white dark:bg-neutral-800"
             id="extension"
             type="text"
-            value={extension}
+            value={employee.extensionsnumber}
             disabled
           />
         </div>
       </div>
     </form>
-  );
-};
+  )
+}
 
-// Main component
 export default function PersonalInformationPage() {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false)
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
+    setTheme(theme === "dark" ? "light" : "dark")
+  }
 
   return (
     <ThemeProvider attribute="class">
@@ -163,15 +138,23 @@ export default function PersonalInformationPage() {
             </div>
           </main>
 
-          {/* Expand/Collapse button */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="fixed bottom-4 left-4 p-2 rounded-full bg-Primary text-neutral-200 hover:bg-primary-foreground hover:text-Primary transition-colors duration-300"
           >
             {isExpanded ? <ChevronLeft size={24} /> : <ChevronRight size={24} />}
           </button>
+
+          {mounted && (
+            <button
+              onClick={toggleTheme}
+              className="fixed top-4 right-4 p-2 rounded-full bg-Primary text-neutral-200 hover:bg-primary-foreground hover:text-Primary transition-colors duration-300"
+            >
+              {theme === "dark" ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
+          )}
         </div>
       </div>
     </ThemeProvider>
-  );
+  )
 }
