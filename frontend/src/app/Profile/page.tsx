@@ -26,64 +26,64 @@ const PersonalInformationForm = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchEmployeeData = async () => {
-      try {
-        setLoading(true);
-        const token = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("accessToken="))
-          ?.split("=")[1];
+  // useEffect(() => {
+  //   const fetchEmployeeData = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const token = document.cookie
+  //         .split("; ")
+  //         .find((row) => row.startsWith("accessToken="))
+  //         ?.split("=")[1];
 
-        if (!token) {
-          setError("No authentication token found");
-          return;
-        }
+  //       if (!token) {
+  //         setError("No authentication token found");
+  //         return;
+  //       }
 
-        const payload = decodeTokenPayload(token);
-        const employeeId = payload?.id;
+  //       const payload = decodeTokenPayload(token);
+  //       const employeeId = payload?.id;
 
-        if (!employeeId) {
-          setError("No employee ID found in token");
-          return;
-        }
+  //       if (!employeeId) {
+  //         setError("No employee ID found in token");
+  //         return;
+  //       }
 
-        const response = await fetch("https://liwan-back.vercel.app/api/v1/employees/", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-            "Cache-Control": "no-cache",
-          },
-        });
+  //       const response = await fetch("https://liwan-back.vercel.app/api/v1/employees/", {
+  //         method: "GET",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //           "Cache-Control": "no-cache",
+  //         },
+  //       });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! status: ${response.status}`);
+  //       }
 
-        const data = await response.json();
-        const employee = data.data.employees.find(
-          (emp) => emp._id === employeeId
-        );
+  //       const data = await response.json();
+  //       const employee = data.data.employees.find(
+  //         (emp) => emp._id === employeeId
+  //       );
 
-        if (employee) {
-          setName(employee.fullName);
-          setPhone(employee.phone || "");
-          setEmail(employee.email);
-          setExtension(employee.extensionsnumber || "");
-        } else {
-          setError("Employee not found");
-        }
-      } catch (error) {
-        console.error("Error fetching employee:", error);
-        setError("Failed to fetch employee data");
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       if (employee) {
+  //         setName(employee.fullName);
+  //         setPhone(employee.phone || "");
+  //         setEmail(employee.email);
+  //         setExtension(employee.extensionsnumber || "");
+  //       } else {
+  //         setError("Employee not found");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching employee:", error);
+  //       setError("Failed to fetch employee data");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchEmployeeData();
-  }, []);
+  //   fetchEmployeeData();
+  // }, []);
 
   if (loading) {
     return <div className="text-center py-4">Loading...</div>;
