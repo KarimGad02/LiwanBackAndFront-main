@@ -70,45 +70,6 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchEmployeeData = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
-
-        const token = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("accessToken="))
-          ?.split("=")[1]
-
-        if (!token) {
-          throw new Error("No access token found")
-        }
-
-        const response = await fetch("https://liwan-back.vercel.app/api/v1/employees/profile", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch employee data")
-        }
-
-        const data = await response.json()
-        setEmployee(data.data.employee)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An unknown error occurred")
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchEmployeeData()
-  }, [])
-
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark")
   }
