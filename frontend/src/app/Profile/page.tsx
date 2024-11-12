@@ -76,7 +76,7 @@ export default function ProfilePage() {
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar />
+     
       <div className="flex-1 relative">
         <main
           className={`flex-1 p-8 overflow-auto transition-all duration-300 ease-in-out ${
