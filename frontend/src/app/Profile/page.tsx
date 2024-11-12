@@ -2,8 +2,7 @@ import { Label } from '@radix-ui/react-label'
 import React from 'react'
 import { Input } from '../components/ui/input'
 
-const PersonalInformationForm = ({ employee }: { employee: Employee | null }) => {
-  if (!employee) return null
+const PersonalInformationForm = () => {
 
   return (
     <form className="space-y-6">
@@ -15,7 +14,7 @@ const PersonalInformationForm = ({ employee }: { employee: Employee | null }) =>
           <Input
             id="name"
             type="text"
-            value={employee.fullName}
+            value="dfsc"
             disabled
             aria-readonly="true"
           />
@@ -27,7 +26,7 @@ const PersonalInformationForm = ({ employee }: { employee: Employee | null }) =>
           <Input
             id="email"
             type="email"
-            value={employee.email}
+            value="sdaads"
             disabled
             aria-readonly="true"
           />
@@ -39,7 +38,7 @@ const PersonalInformationForm = ({ employee }: { employee: Employee | null }) =>
           <Input
             id="extension"
             type="text"
-            value={employee.extensionsnumber}
+            value="asdsad"
             disabled
             aria-readonly="true"
           />
