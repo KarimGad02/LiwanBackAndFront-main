@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { Sidebar } from "@/app/components/ui/sidebar";
 import { useState, useEffect } from "react";
 import { Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react";
