@@ -42,40 +42,9 @@ const TicketResponsePage = () => {
 
   useEffect(() => {
     setIsClient(true);
-    fetchTicket();
   }, []);
 
-  const fetchTicket = async () => {
-    try {
-      const accessToken = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("accessToken"))
-        ?.split("=")[1];
-
-      if (!accessToken) {
-        throw new Error("No access token found");
-      }
-
-      const response = await fetch(`https://liwan-back.vercel.app/api/v1/tickets/${ticketId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch ticket");
-      }
-
-      const data = await response.json();
-      setTicket(data.data.ticket);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setFileUplaoded(event.target.files[0]);
     }
