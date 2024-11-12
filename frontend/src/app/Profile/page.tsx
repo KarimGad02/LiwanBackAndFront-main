@@ -1,8 +1,12 @@
 "use client";
-
 import { Sidebar } from "@/app/components/ui/sidebar";
 import { useState, useEffect } from "react";
-import { Moon, Sun, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Moon,
+  Sun,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeProvider, useTheme } from "next-themes";
 
@@ -12,8 +16,6 @@ const PersonalInformationForm = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [extension, setExtension] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const decodeTokenPayload = (token) => {
     try {
@@ -26,72 +28,53 @@ const PersonalInformationForm = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const fetchEmployeeData = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const token = document.cookie
-  //         .split("; ")
-  //         .find((row) => row.startsWith("accessToken="))
-  //         ?.split("=")[1];
+  useEffect(() => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("accessToken="))
+      ?.split("=")[1];
 
-  //       if (!token) {
-  //         setError("No authentication token found");
-  //         return;
-  //       }
+    if (!token) return;
 
-  //       const payload = decodeTokenPayload(token);
-  //       const employeeId = payload?.id;
+    const payload = decodeTokenPayload(token);
+    const employeeId = payload?.id;
 
-  //       if (!employeeId) {
-  //         setError("No employee ID found in token");
-  //         return;
-  //       }
+    if (!employeeId) return;
 
-  //       const response = await fetch("https://liwan-back.vercel.app/api/v1/employees/", {
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-Type": "application/json",
-  //           "Cache-Control": "no-cache",
-  //         },
-  //       });
+    fetchEmployeeData(token, employeeId);
+  }, []);
 
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! status: ${response.status}`);
-  //       }
+  const fetchEmployeeData = (token, employeeId) => {
+    fetch("http://127.0.0.1:5000/api/v1/employees/", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const employee = data.data.employees.find(
+          (emp) => emp._id === employeeId
+        );
 
-  //       const data = await response.json();
-  //       const employee = data.data.employees.find(
-  //         (emp) => emp._id === employeeId
-  //       );
-
-  //       if (employee) {
-  //         setName(employee.fullName);
-  //         setPhone(employee.phone || "");
-  //         setEmail(employee.email);
-  //         setExtension(employee.extensionsnumber || "");
-  //       } else {
-  //         setError("Employee not found");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching employee:", error);
-  //       setError("Failed to fetch employee data");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchEmployeeData();
-  // }, []);
-
-  if (loading) {
-    return <div className="text-center py-4">Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500 text-center py-4">{error}</div>;
-  }
+        if (employee) {
+          setName(employee.fullName);
+          setPhone(employee.phone || "");
+          setEmail(employee.email);
+          setExtension(employee.extensionsnumber || "");
+        } else {
+          console.error("Employee not found");
+        }
+      })
+      .catch((error) => console.error("Error fetching employee:", error));
+  };
 
   return (
     <form className="space-y-6">
@@ -151,9 +134,9 @@ export default function PersonalInformationPage() {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return null;
-  }
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <ThemeProvider attribute="class">
@@ -180,6 +163,7 @@ export default function PersonalInformationPage() {
             </div>
           </main>
 
+          {/* Expand/Collapse button */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="fixed bottom-4 left-4 p-2 rounded-full bg-Primary text-neutral-200 hover:bg-primary-foreground hover:text-Primary transition-colors duration-300"
