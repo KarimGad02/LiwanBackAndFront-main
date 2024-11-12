@@ -185,50 +185,50 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   );
 };
 
-// const Logo: React.FC = () => {
-//   const router = useRouter();
+const Logo: React.FC = () => {
+  const router = useRouter();
 
-//   return (
-//     <div
-//       onClick={() => router.push("/profile")}
-//       className="cursor-pointer font-normal flex space-x-2 items-center text-sm text-neutral-100 py-1 relative z-20"
-//     >
-//       <Image
-//         src="/Sidebar-Icon.jpg"
-//         width={40}
-//         height={40}
-//         className="rounded-full"
-//         alt="Profile Icon"
-//       />
-//       <motion.span
-//         initial={{ opacity: 0 }}
-//         animate={{ opacity: 1 }}
-//         className="font-medium text-white whitespace-pre"
-//       >
-//         Profile
-//       </motion.span>
-//     </div>
-//   );
-// };
+  return (
+    <div
+      onClick={() => router.push("/Profile")}
+      className="cursor-pointer font-normal flex space-x-2 items-center text-sm text-neutral-100 py-1 relative z-20"
+    >
+      <Image
+        src="/Sidebar-Icon.jpg"
+        width={40}
+        height={40}
+        className="rounded-full"
+        alt="Profile Icon"
+      />
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="font-medium text-white whitespace-pre"
+      >
+        Profile
+      </motion.span>
+    </div>
+  );
+};
 
-// const LogoIcon: React.FC = () => {
-//   const router = useRouter();
+const LogoIcon: React.FC = () => {
+  const router = useRouter();
 
-//   return (
-//     <div
-//       onClick={() => router.push("/profile")}
-//       className="cursor-pointer font-normal flex space-x-2 items-center text-sm text-black dark:text-white py-1 relative z-20"
-//     >
-//       <Image
-//         src="/Sidebar-Icon.jpg"
-//         width={30}
-//         height={30}
-//         className="rounded-full mx-1"
-//         alt="Profile Icon"
-//       />
-//     </div>
-//   );
-// };
+  return (
+    <div
+      onClick={() => router.push("/Profile")}
+      className="cursor-pointer font-normal flex space-x-2 items-center text-sm text-black dark:text-white py-1 relative z-20"
+    >
+      <Image
+        src="/Sidebar-Icon.jpg"
+        width={30}
+        height={30}
+        className="rounded-full mx-1"
+        alt="Profile Icon"
+      />
+    </div>
+  );
+};
 
 const SidebarLink: React.FC<{ link: SidebarLink }> = ({ link }) => {
   const router = useRouter();
