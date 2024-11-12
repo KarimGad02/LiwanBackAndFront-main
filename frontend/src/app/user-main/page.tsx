@@ -102,10 +102,10 @@ export function AppleCardsCarouselDemo() {
   ));
 
   return (
+    
     <div className="w-full h-screen overflow-hidden py-20">
-      <div> <h1>whdahiodhwwiopahopih</h1></div>
       <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-Primary dark:text-neutral-200 font-sans pb-6">
-        How Can We Help??????????????
+        How Can We Help?
       </h2>
       <Carousel items={cards} />
     </div>
