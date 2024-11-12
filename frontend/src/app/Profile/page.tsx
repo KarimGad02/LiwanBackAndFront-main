@@ -142,7 +142,7 @@ const PersonalInformationForm = () => {
 };
 
 // Main component
-export default function PersonalInformationPage() {
+export default function page() {
   const [isExpanded, setIsExpanded] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
