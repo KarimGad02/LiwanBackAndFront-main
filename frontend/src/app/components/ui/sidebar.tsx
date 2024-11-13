@@ -282,7 +282,7 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+      className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 w-10 h-10"
     >
       {theme === "dark" ? (
         <svg
