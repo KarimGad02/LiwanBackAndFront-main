@@ -421,7 +421,7 @@ export default function TicketHistory() {
   return (
     <ThemeProvider attribute="class">
       <div className="flex h-screen bg-Primary">
-        <Sidebar />
+        <Sidebar className="shrink-0"/>
         <main className="flex-1 overflow-y-auto bg-neutral-300 dark:bg-Primary">
         <TicketManagement />
         </main>
