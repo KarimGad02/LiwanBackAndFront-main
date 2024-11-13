@@ -133,7 +133,7 @@ export function AdminDashboard() {
         const employeeId = payload?.id;
 
         if (employeeId) {
-          fetch(`https://liwan-back.vercel.app/api/v1/employees/`, {
+          fetch(`api.liwan.mavoid.com/api/v1/employees/`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
@@ -165,7 +165,7 @@ export function AdminDashboard() {
   if (typeof window !== "undefined") {
     useEffect(() => {
       if (isAdmin) {
-        fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
+        fetch(`api.liwan.mavoid.com/api/v1/departments/`, {
           headers: {
             Authorization: `Bearer ${document.cookie
               .split("; ")
@@ -190,7 +190,7 @@ export function AdminDashboard() {
 
     try {
       if (typeof window !== "undefined") {
-        const response = await fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
+        const response = await fetch(`api.liwan.mavoid.com/api/v1/departments/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -234,7 +234,7 @@ export function AdminDashboard() {
           .find((row) => row.startsWith("accessToken"))
           ?.split("=")[1];
         const response = await fetch(
-          `https://liwan-back.vercel.app/api/v1/employees/UpdateManagerDep`,
+          `api.liwan.mavoid.com/api/v1/employees/UpdateManagerDep`,
           {
             method: "PATCH",
             headers: {
@@ -271,7 +271,7 @@ export function AdminDashboard() {
         // Make the DELETE request to the API endpoint
 
         const response = await fetch(
-          `https://liwan-back.vercel.app/api/v1/departments/${departmentId}`,
+          `api.liwan.mavoid.com/api/v1/departments/${departmentId}`,
           {
             method: "DELETE",
             headers: {
@@ -303,7 +303,7 @@ export function AdminDashboard() {
   const fetchDepartments = async () => {
     if (typeof window !== "undefined") {
       try {
-        const response = await fetch(`https://liwan-back.vercel.app/api/v1/departments/`, {
+        const response = await fetch(`api.liwan.mavoid.com/api/v1/departments/`, {
           headers: {
             Authorization: `Bearer ${document.cookie
               .split("; ")
@@ -330,7 +330,7 @@ export function AdminDashboard() {
         ?.split("=")[1];
 
       if (accessToken) {
-        fetch(`https://liwan-back.vercel.app/api/v1/employees/`, {
+        fetch(`api.liwan.mavoid.com/api/v1/employees/`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -378,7 +378,7 @@ export function AdminDashboard() {
           .find((row) => row.startsWith("accessToken"))
           ?.split("=")[1];
         const response = await fetch(
-          `https://liwan-back.vercel.app/api/v1/employees/UpdateManagerDep`,
+          `api.liwan.mavoid.com/api/v1/employees/UpdateManagerDep`,
           {
             method: "PATCH",
             headers: {
