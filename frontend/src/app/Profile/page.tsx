@@ -148,11 +148,11 @@ export default function page() {
  
   return (
     <ThemeProvider attribute="class">
-      <div className="flex h-fit bg-Primary">
+      <div className="flex h-screen bg-Primary">
         <Sidebar />
         <div className="flex-1 relative">
           <main
-            className={`flex-1 p-8 overflow-auto dark:bg-neutral-950 bg-neutral-200 text-Primary dark:text-neutral-200 transition-all duration-300 ease-in-out ${
+            className={`flex-1 p-8 overflow-auto dark:bg-Primary bg-neutral-200 text-Primary dark:text-neutral-200 transition-all duration-300 ease-in-out ${
               isExpanded ? "ml-[150px]" : "ml-[30px]"
             }`}
           >
