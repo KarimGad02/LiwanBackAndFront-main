@@ -422,10 +422,10 @@ export default function TicketHistory() {
     <ThemeProvider attribute="class">
       <div className="flex h-screen bg-Primary">
         <Sidebar />
-        <main className="flex-1 overflow-y-auto">
-          <TicketManagement />
+        <main className="flex-1 overflow-y-auto bg-neutral-300 dark:bg-Primary">
+        <TicketManagement />
         </main>
       </div>
     </ThemeProvider>
-  );
+  )
 }
