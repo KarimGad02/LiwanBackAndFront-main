@@ -12,6 +12,7 @@ import {
   LogOut,
   Plus,
   Ticket,
+  Contact
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -35,15 +36,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   const [isManager, setIsManager] = useState(false);
   const [isHomePage, setIsHomePage] = useState(false);
   const links: SidebarLink[] = [
-    
-    {
-      label: "Profile",
-      href: "/Profile",
-      icon: (
-        <IconBrandTabler className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />
-      ),
-      show: !isHomePage,
-    },
     {
       label: "Home",
       href: "/user-main",
@@ -58,7 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       icon: (
         <IconBrandTabler className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />
       ),
-      show: true
+      show: !isAdmin && !isManager,
     },
     {
       label: "Admin Dashboard",
@@ -72,13 +64,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       label: "Assigned to me",
       href: "/tickets-assigned",
       icon: <Ticket className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
-      show: isAdmin || isManager,
+      show: isAdmin && isManager,
     },
     {
       label: "Submit a ticket",
       href: "/user-ticket",
       icon: <Plus className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
-      show: !isManager || !isAdmin,
+      show: !isManager && !isAdmin,
     },
     {
       label: "History",
@@ -86,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       icon: (
         <HistoryIcon className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />
       ),
-      show: isAdmin,
+      show: isManager && isAdmin,
     },
     {
       label: "Logout",
