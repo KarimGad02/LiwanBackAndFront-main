@@ -293,7 +293,7 @@ function TicketItem({ ticket, onView }) {
   );
 }
 
-function TicketDetailsPopup({ ticket, onClose }) {
+function TicketDetailsPopup({ ticket, onClose, onNavigateToRespond }) {
   const {
     title,
     description,
@@ -302,14 +302,13 @@ function TicketDetailsPopup({ ticket, onClose }) {
     assignedTo,
     status,
     response,
-    fileUploaded,
   } = ticket;
   const createdDate = new Date(createdAt).toLocaleDateString();
   const router = useRouter();
   const handleRespond = () => {
     router.push(`/${ticket._id}`);
     onClose();
-  }
+  };
 
   return (
     <motion.div
@@ -326,7 +325,7 @@ function TicketDetailsPopup({ ticket, onClose }) {
         className="bg-Primary p-6 rounded-lg shadow-xl max-w-md w-full m-4 text-neutral-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-4">
           <div className="flex items-start space-x-4">
             <img
               src="/Sidebar-Icon.jpg"
@@ -367,19 +366,6 @@ function TicketDetailsPopup({ ticket, onClose }) {
             </span>
           </div>
 
-          {fileUploaded && (
-            <div className="mt-4">
-              <h3 className="font-semibold mb-2">Attachment</h3>
-              <Image
-                src={`api.liwan.mavoid.com/user_ticket/${createdBy?._id}/${fileUploaded}`}
-                alt="Ticket attachment"
-                width={300}
-                height={300}
-                className="rounded-md object-cover"
-              />
-            </div>
-          )}
-
           <div className="mt-4 p-4 rounded-lg">
             <h3 className="font-semibold mb-2">Response</h3>
             {response ? (
@@ -393,17 +379,6 @@ function TicketDetailsPopup({ ticket, onClose }) {
                   </p>
                 </div>
                 <p className="text-sm">{response.description}</p>
-                {response.fileUploaded && (
-                  <div className="mt-2">
-                    <Image
-                      src={`api.liwan.mavoid.com/user_ticket/${response.createdBy?._id}/${response.fileUploaded}`}
-                      alt="Response attachment"
-                      width={200}
-                      height={200}
-                      className="rounded-md object-cover"
-                    />
-                  </div>
-                )}
               </div>
             ) : (
               <p className="text-sm">No response yet.</p>
@@ -426,6 +401,7 @@ function TicketDetailsPopup({ ticket, onClose }) {
   );
 }
 
+
 export default function Page() {
   return (
     <ThemeProvider attribute="class">
@@ -438,3 +414,5 @@ export default function Page() {
     </ThemeProvider>
   );
 }
+
+

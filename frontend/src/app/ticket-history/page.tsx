@@ -340,7 +340,7 @@ function TicketDetailsPopup({ ticket, onClose, onNavigateToRespond }) {
         className="bg-Primary p-6 rounded-lg shadow-xl max-w-md w-full m-4 text-neutral-200"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-4">
           <div className="flex items-start space-x-4">
             <img
               src="/Sidebar-Icon.jpg"
@@ -371,10 +371,11 @@ function TicketDetailsPopup({ ticket, onClose, onNavigateToRespond }) {
           <div>
             <p className="text-sm">Assigned to: {assignedTo?.name}</p>
             <span
-              className={`mt-2 inline-block px-2 py-1 rounded-full text-xs font-semibold ${status === "pending"
-                ? "bg-yellow-200 text-yellow-800"
-                : "bg-green-200 text-green-800"
-                }`}
+              className={`mt-2 inline-block px-2 py-1 rounded-full text-xs font-semibold ${
+                status === "pending"
+                  ? "bg-yellow-200 text-yellow-800"
+                  : "bg-green-200 text-green-800"
+              }`}
             >
               {status}
             </span>
@@ -421,11 +422,11 @@ export default function TicketHistory() {
   return (
     <ThemeProvider attribute="class">
       <div className="flex h-screen bg-Primary">
-        <Sidebar className="shrink-0"/>
-        <main className="flex-1 overflow-y-auto bg-neutral-300 dark:bg-Primary">
-        <TicketManagement />
+        <Sidebar />
+        <main className="flex-1 overflow-y-auto">
+          <TicketManagement />
         </main>
       </div>
     </ThemeProvider>
-  )
+  );
 }
