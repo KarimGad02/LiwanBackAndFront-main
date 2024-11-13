@@ -70,7 +70,7 @@ const PersonalInformationForm = () => {
           setName(employee.fullName);
           setPhone(employee.phone || "");
           setEmail(employee.email);
-          setExtension(employee.extensionsnumber || "");
+          setExtension(employee.extensionsnumber );
         } else {
           setError("Employee not found");
         }
