@@ -72,7 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       label: "Assigned to me",
       href: "/tickets-assigned",
       icon: <Ticket className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
-      show: isAdmin || isManager,
+      show:  isManager,
     },
     {
       label: "Submit a ticket",
@@ -177,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden pt-6">
+      <div className="flex flex-col flex-1 overflow-auto overflow-hidden pt-6">
         {/* {open ? <Logo /> : <LogoIcon />} */}
         <div className="mt-8 flex flex-col gap-2">
           {links
