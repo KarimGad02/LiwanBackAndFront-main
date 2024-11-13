@@ -45,6 +45,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       show: !isHomePage,
     },
     {
+      label: "Profile",
+      href: "/Profile",
+      icon: (
+        <Contact className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />
+      ),
+      show: !isHomePage,
+    },
+    {
       label: "My Tickets",
       href: "/user-main/ticket",
       icon: (
@@ -64,7 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       label: "Assigned to me",
       href: "/tickets-assigned",
       icon: <Ticket className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />,
-      show: isAdmin && isManager,
+      show: isAdmin || isManager,
     },
     {
       label: "Submit a ticket",
@@ -78,7 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       icon: (
         <HistoryIcon className="text-neutral-200 h-6 w-6 flex-shrink-0 mx-2" />
       ),
-      show: isManager && isAdmin,
+      show: isManager || isAdmin,
     },
     {
       label: "Logout",
@@ -92,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
       show: true,
     },
   ];
-
+ 
   const decodeTokenPayload = (token) => {
     try {
       const base64Payload = token.split(".")[1];
