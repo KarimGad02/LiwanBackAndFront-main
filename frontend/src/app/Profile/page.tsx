@@ -148,7 +148,7 @@ export default function page() {
  
   return (
     <ThemeProvider attribute="class">
-      <div className="flex h-screen bg-Primary">
+      <div className="flex h-fit bg-Primary">
         <Sidebar />
         <div className="flex-1 relative">
           <main
