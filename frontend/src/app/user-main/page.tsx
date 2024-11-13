@@ -65,7 +65,7 @@ export function AppleCardsCarouselDemo() {
     console.log("Decoded token payload:", payload);
 
     // Fetch departments using the token in headers
-      fetch(`api.liwan.mavoid.com/api/v1/departments/`, {
+      fetch(`https://api.liwan.mavoid.com/api/v1/departments/`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

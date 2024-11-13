@@ -119,7 +119,7 @@ export function TicketManagement() {
                 const fetchDepartmentTickets = async (deptId) => {
                   try {
                     const response = await fetch(
-                      `api.liwan.mavoid.com/api/v1/departments/${deptId}`,
+                      `https://api.liwan.mavoid.com/api/v1/departments/${deptId}`,
                       {
                         headers: {
                           Authorization: `Bearer ${accessToken}`,

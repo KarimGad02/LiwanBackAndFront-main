@@ -105,7 +105,7 @@ export function TicketManagement() {
       const employeeId = payload?.id;
 
       if (employeeId) {
-        fetch("api.liwan.mavoid.com/api/v1/employees/", {
+        fetch("https://api.liwan.mavoid.com/api/v1/employees/", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -118,7 +118,7 @@ export function TicketManagement() {
             if (employee) {
               setEmployeeData(employee);
 
-              fetch("api.liwan.mavoid.com/api/v1/tickets/getMyTickets", {
+              fetch("https://api.liwan.mavoid.com/api/v1/tickets/getMyTickets", {
                 headers: {
                   Authorization: `Bearer ${accessToken}`,
                 },
@@ -271,7 +271,7 @@ function TicketItem({ ticket, onView }) {
           {fileUploaded && (
             <div className="mt-2">
               <Image
-                src={`api.liwan.mavoid.com/user_ticket/${createdBy?._id}/${fileUploaded}`}
+                src={`https://api.liwan.mavoid.com/user_ticket/${createdBy?._id}/${fileUploaded}`}
                 alt="Ticket attachment"
                 width={100}
                 height={100}

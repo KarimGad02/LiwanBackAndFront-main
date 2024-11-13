@@ -56,7 +56,7 @@ const TicketResponsePage = () => {
         throw new Error("No access token found");
       }
 
-      const response = await fetch(`api.liwan.mavoid.com/api/v1/tickets/${ticketId}`, {
+      const response = await fetch(`https://api.liwan.mavoid.com/api/v1/tickets/${ticketId}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -99,7 +99,7 @@ const TicketResponsePage = () => {
         fileUploaded,
       };
   
-      const submitResponse = await fetch(`api.liwan.mavoid.com/api/v1/tickets/${ticketId}`, {
+      const submitResponse = await fetch(`https://api.liwan.mavoid.com/api/v1/tickets/${ticketId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

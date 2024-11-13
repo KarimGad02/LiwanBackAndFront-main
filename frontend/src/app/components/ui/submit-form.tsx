@@ -40,7 +40,7 @@ const TicketForm = () => {
         throw new Error('No access token found');
       }
 
-      const response = await fetch('api.liwan.mavoid.com/api/v1/departments', {
+      const response = await fetch('https://api.liwan.mavoid.com/api/v1/departments', {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ const TicketForm = () => {
     }
   
     try {
-      const response = await fetch("api.liwan.mavoid.com/api/v1/tickets/", {
+      const response = await fetch("https://api.liwan.mavoid.com/api/v1/tickets/", {
         method: "POST",
         credentials: 'include',
         headers: {

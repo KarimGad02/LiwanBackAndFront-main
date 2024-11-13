@@ -48,7 +48,7 @@ const PersonalInformationForm = () => {
           return;
         }
 
-        const response = await fetch("api.liwan.mavoid.com/api/v1/employees/", {
+        const response = await fetch("https://api.liwan.mavoid.com/api/v1/employees/", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
