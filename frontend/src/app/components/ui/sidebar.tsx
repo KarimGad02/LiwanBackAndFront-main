@@ -129,7 +129,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   }, []);
 
   const fetchEmployeeData = (token, employeeId) => {
-    fetch("https://liwan-back.vercel.app/api/v1/employees/", {
+    fetch("api.liwan.mavoid.com/api/v1/employees/", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
